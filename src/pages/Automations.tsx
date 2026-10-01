@@ -22,7 +22,7 @@ export default function Automations({ onlyKey }: { onlyKey?: string }) {
   const [msg, setMsg] = useState<string | null>(null);
 
   if (loading) return <Loading />;
-  if (error || !data) return <ErrorBox message={error ?? 'No pude cargar los atajos.'} onRetry={reload} />;
+  if (error || !data) return <ErrorBox message={error ?? 'No pude cargar la magia.'} onRetry={reload} />;
   const list = onlyKey ? data.automations.filter((a) => a.key === onlyKey) : data.automations;
 
   async function toggle(a: Automation) {
@@ -32,9 +32,9 @@ export default function Automations({ onlyKey }: { onlyKey?: string }) {
 
   return (
     <div>
-      {!onlyKey && <h1 className="page-title">Atajos</h1>}
+      {!onlyKey && <h1 className="page-title">Magia</h1>}
       {msg && <p className="mb-2 text-terracota" role="alert">{msg}</p>}
-      {list.length === 0 ? <Empty>No hay atajos.</Empty> : list.map((a) => {
+      {list.length === 0 ? <Empty>No hay nada de magia todavía.</Empty> : list.map((a) => {
         const runs = data.runs.filter((r) => r.automation_id === a.id);
         return (
           <section key={a.id} className="card mb-4">
@@ -53,7 +53,7 @@ export default function Automations({ onlyKey }: { onlyKey?: string }) {
           </section>
         );
       })}
-      {!onlyKey && <p className="text-xs text-suave">Por ahora solo existe el atajo de la cuota escolar. Nuevos atajos se agregan en el código (ver docs/ARCHITECTURE.md).</p>}
+      {!onlyKey && <p className="text-xs text-suave">Por ahora solo existe la magia de la cuota escolar. Nuevas magias se agregan en el código (ver docs/ARCHITECTURE.md).</p>}
     </div>
   );
 }

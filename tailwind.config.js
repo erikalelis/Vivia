@@ -13,8 +13,8 @@ export default {
         suave: '#75699a'
       },
       fontFamily: {
-        sans: ['Inter', 'ui-sans-serif', 'system-ui', 'sans-serif'],
-        display: ['"Plus Jakarta Sans"', 'Inter', 'ui-sans-serif', 'system-ui', 'sans-serif']
+        sans: ['"DM Sans"', 'ui-sans-serif', 'system-ui', 'sans-serif'],
+        display: ['Fraunces', 'Georgia', 'serif', 'ui-sans-serif', 'ui-sans-serif', 'system-ui', 'sans-serif']
       },
       borderRadius: { xl2: '1.25rem' },
       boxShadow: { calma: '0 8px 30px -10px rgba(91,63,181,0.25)' }

@@ -5,7 +5,7 @@ import { useVoice } from '@/hooks/useVoice';
 import { ai, AiNotAvailableError } from '@/services/ai';
 import { saveInterpretedItems } from '@/services/brain';
 
-/** "Despejar la cabeza": escribir o hablar → la IA ordena → la persona confirma → se guarda. */
+/** "Contale a VIVIA": escribir o hablar → la IA ordena → la persona confirma → se guarda. */
 export default function BrainDump({ onClose, onSaved }: { onClose: () => void; onSaved: () => void }) {
   const [text, setText] = useState('');
   const [busy, setBusy] = useState(false);
@@ -61,10 +61,10 @@ export default function BrainDump({ onClose, onSaved }: { onClose: () => void; o
   }
 
   return (
-    <Modal title="Despejar la cabeza" onClose={onClose}>
+    <Modal title="Contale a VIVIA" onClose={onClose}>
       {!items ? (
         <>
-          <p className="mb-2 text-sm text-suave">Contame todo lo que tenés en la cabeza, escribiendo o hablando. Yo lo ordeno.</p>
+          <p className="mb-2 text-sm text-suave">Contame lo que tenés en mente, escribiendo o hablando. Yo lo ordeno por vos.</p>
           <textarea rows={5} value={text} onChange={(e) => setText(e.target.value)} placeholder="Ej: El viernes tengo que llamar al colegio y el sábado comprar el regalo de Mia." />
           {voice.interim && <p className="mt-1 text-sm italic text-suave">{voice.interim}…</p>}
           {error && <p className="mt-2 text-terracota" role="alert">{error}</p>}

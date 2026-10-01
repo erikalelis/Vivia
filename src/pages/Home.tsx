@@ -41,7 +41,7 @@ export default function Home() {
     <div>
       <h1 className="page-title">{greeting()}, {settings.display_name ?? ''}</h1>
 
-      <button className="btn-primary mb-5 w-full !rounded-2xl !py-5 text-lg font-semibold tracking-wide md:w-auto md:!px-10" onClick={() => setDump(true)}><Icon name="mic" size={24} />DESPEJAR LA CABEZA</button>
+      <button className="btn-primary mb-5 w-full !rounded-2xl !py-5 text-lg font-semibold tracking-wide md:w-auto md:!px-10" onClick={() => setDump(true)}><Icon name="mic" size={24} />CONTALE A VIVIA</button>
       {typeof Notification !== 'undefined' && Notification.permission === 'default' && (
         <button className="btn-soft mb-5 ml-0 w-full md:ml-3 md:w-auto" onClick={() => askNotificationPermission().then(reload)}>Activar recordatorios</button>
       )}

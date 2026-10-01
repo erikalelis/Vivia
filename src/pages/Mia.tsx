@@ -7,7 +7,7 @@ import AutomationsPanel from '@/pages/Automations';
 
 const TABS = [
   { k: 'cuotas', l: 'Cuotas' }, { k: 'agenda', l: 'Agenda' }, { k: 'pendientes', l: 'Pendientes' },
-  { k: 'documentos', l: 'Documentos' }, { k: 'automatizaciones', l: 'Automatizaciones' }
+  { k: 'documentos', l: 'Documentos' }, { k: 'automatizaciones', l: 'Atajos' }
 ] as const;
 
 export default function Mia() {

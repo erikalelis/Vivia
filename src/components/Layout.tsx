@@ -13,7 +13,7 @@ const MORE = [
   { to: '/carrera', label: 'Mi carrera', icon: 'briefcase' },
   { to: '/proyectos', label: 'Mis proyectos', icon: 'layers' },
   { to: '/documentos', label: 'Documentos', icon: 'file' },
-  { to: '/automatizaciones', label: 'Automatizaciones', icon: 'zap' },
+  { to: '/automatizaciones', label: 'Atajos', icon: 'zap' },
   { to: '/ajustes', label: 'Ajustes', icon: 'sliders' }
 ];
 

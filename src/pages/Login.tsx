@@ -6,6 +6,7 @@ export default function Login() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [busy, setBusy] = useState(false);
+  const [show, setShow] = useState(false);
   const [msg, setMsg] = useState<{ ok: boolean; text: string } | null>(null);
 
   async function submit(e: FormEvent) {
@@ -52,7 +53,8 @@ export default function Login() {
           <h2 className="text-xl">{mode === 'login' ? 'Ingresar' : mode === 'register' ? 'Crear cuenta' : 'Recuperar contraseña'}</h2>
           <div><label htmlFor="email">Correo</label><input id="email" type="email" autoComplete="email" required value={email} onChange={(e) => setEmail(e.target.value)} /></div>
           {mode !== 'forgot' && (
-            <div><label htmlFor="pw">Contraseña</label><input id="pw" type="password" autoComplete={mode === 'login' ? 'current-password' : 'new-password'} required value={password} onChange={(e) => setPassword(e.target.value)} /></div>
+            <div><label htmlFor="pw">Contraseña</label><input id="pw" type={show ? 'text' : 'password'} autoComplete={mode === 'login' ? 'current-password' : 'new-password'} required value={password} onChange={(e) => setPassword(e.target.value)} />
+              <button type="button" className="mt-1 text-sm text-suave underline" onClick={() => setShow((v) => !v)}>{show ? 'Ocultar contraseña' : 'Mostrar contraseña'}</button></div>
           )}
           {msg && <p className={msg.ok ? 'text-salvia-dark' : 'text-terracota'} role="alert">{msg.text}</p>}
           <button className="btn-primary w-full" disabled={busy || !isConfigured}>
@@ -71,6 +73,7 @@ export default function Login() {
 
 export function ResetPassword({ onDone }: { onDone: () => void }) {
   const [pw, setPw] = useState('');
+  const [show, setShow] = useState(false);
   const [msg, setMsg] = useState<string | null>(null);
   async function submit(e: FormEvent) {
     e.preventDefault();
@@ -83,7 +86,8 @@ export function ResetPassword({ onDone }: { onDone: () => void }) {
     <div className="flex min-h-full items-center justify-center p-5">
       <form onSubmit={submit} className="card w-full max-w-sm space-y-3">
         <h2 className="text-xl">Nueva contraseña</h2>
-        <input type="password" autoComplete="new-password" value={pw} onChange={(e) => setPw(e.target.value)} placeholder="Mínimo 8 caracteres" />
+        <input type={show ? 'text' : 'password'} autoComplete="new-password" value={pw} onChange={(e) => setPw(e.target.value)} placeholder="Mínimo 8 caracteres" />
+        <button type="button" className="text-sm text-suave underline" onClick={() => setShow((v) => !v)}>{show ? 'Ocultar contraseña' : 'Mostrar contraseña'}</button>
         {msg && <p className="text-terracota" role="alert">{msg}</p>}
         <button className="btn-primary w-full">Guardar</button>
       </form>

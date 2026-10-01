@@ -1,0 +1,24 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  html, body, #root { height: 100%; }
+  body { @apply bg-crema text-tinta font-sans antialiased; -webkit-tap-highlight-color: transparent; }
+  h1, h2 { @apply font-display font-semibold tracking-tight; }
+  input, select, textarea { @apply w-full rounded-xl border border-arena bg-white px-3 py-2.5 text-base outline-none focus:border-salvia focus:ring-2 focus:ring-salvia-soft; }
+  label { @apply block text-sm text-suave mb-1; }
+}
+
+@layer components {
+  .card { @apply rounded-xl2 bg-white p-4 shadow-calma; }
+  .btn { @apply inline-flex items-center justify-center gap-2 rounded-xl px-4 py-2.5 text-base font-medium transition active:scale-[0.98] disabled:opacity-50; }
+  .btn-primary { @apply btn bg-gradient-to-br from-salvia to-lila text-white shadow-calma hover:brightness-110; }
+  .btn-soft { @apply btn bg-salvia-soft text-salvia-dark hover:bg-arena; }
+  .btn-ghost { @apply btn text-suave hover:bg-arena; }
+  .btn-danger { @apply btn bg-terracota-soft text-terracota hover:bg-arena; }
+  .chip { @apply inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-medium; }
+  .page-title { @apply text-2xl md:text-3xl text-tinta mb-4; }
+}
+
+.pb-safe { padding-bottom: env(safe-area-inset-bottom); }

@@ -5,7 +5,7 @@ import { useVoice } from '@/hooks/useVoice';
 import { ai, AiNotAvailableError } from '@/services/ai';
 import { saveInterpretedItems } from '@/services/brain';
 
-/** "Contale a VIVIA": escribir o hablar → la IA ordena → la persona confirma → se guarda. */
+/** "Hablale a VIVIA": escribir o hablar → la IA ordena → la persona confirma → se guarda. */
 export default function BrainDump({ onClose, onSaved }: { onClose: () => void; onSaved: () => void }) {
   const [text, setText] = useState('');
   const [busy, setBusy] = useState(false);
@@ -61,7 +61,7 @@ export default function BrainDump({ onClose, onSaved }: { onClose: () => void; o
   }
 
   return (
-    <Modal title="Contale a VIVIA" onClose={onClose}>
+    <Modal title="Hablale a VIVIA" onClose={onClose}>
       {!items ? (
         <>
           <p className="mb-2 text-sm text-suave">Contame lo que tenés en mente, escribiendo o hablando. Yo lo ordeno por vos.</p>

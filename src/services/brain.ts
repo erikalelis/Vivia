@@ -6,7 +6,7 @@ import type { Task } from '@/types';
 // Argentina no usa horario de verano: el offset es fijo.
 const AR = '-03:00';
 
-/** Guarda lo que la usuaria ya confirmó en "Contale a VIVIA". */
+/** Guarda lo que la usuaria ya confirmó en "Hablale a VIVIA". */
 export async function saveInterpretedItems(items: InterpretedItem[]): Promise<number> {
   const people = await peopleRepo.list();
   const { data: auth } = await supabase.auth.getUser();

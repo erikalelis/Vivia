@@ -31,5 +31,5 @@
 - [ ] Crear cuenta e ingresar · recuperar contraseña (llega el correo)
 - [ ] Crear tarea con fecha de ayer: aparece como 🔴 Vencida y no desaparece
 - [ ] Subir un PDF de cuota real: total correcto, 50 % correcto, WhatsApp abre con el mensaje
-- [ ] "Contale a VIVIA" con texto y con voz
+- [ ] "Hablale a VIVIA" con texto y con voz
 - [ ] Instalar en el celular, publicar un cambio mínimo y confirmar que aparece "Nueva versión" y los datos siguen

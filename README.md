@@ -35,11 +35,11 @@ supabase secrets set ANTHROPIC_API_KEY=sk-ant-...
 supabase functions deploy interpret
 supabase functions deploy extract-payment
 ```
-Sin esto, VIVIA funciona (tareas, agenda, documentos, cuotas cargadas a mano) pero **"Contale a VIVIA" y la lectura automática del PDF muestran un aviso claro de que la IA no está configurada**; no hay nada simulado.
+Sin esto, VIVIA funciona (tareas, agenda, documentos, cuotas cargadas a mano) pero **"Hablale a VIVIA" y la lectura automática del PDF muestran un aviso claro de que la IA no está configurada**; no hay nada simulado.
 
 ## Qué está implementado
 - Registro, login, logout, recuperación de contraseña, sesión persistente; datos aislados por usuario (RLS).
-- Inicio con resumen (Hoy, Mia, Carrera, Proyectos, Documentos) y botón **Contale a VIVIA** (texto o voz → IA → confirmación → guardado).
+- Inicio con resumen (Hoy, Mia, Carrera, Proyectos, Documentos) y botón **Hablale a VIVIA** (texto o voz → IA → confirmación → guardado).
 - **Pendientes**: 6 estados, las vencidas **nunca desaparecen** (Mantener / Reprogramar / Completar / Cancelar), filtros Hoy · Próximas · Vencidas · Esta semana · Todas, prioridad, etiquetas, recurrencia (al completar crea la siguiente), notas y adjuntos.
 - **Agenda**: día, semana y mes; eventos manuales o por IA.
 - **Mia**: Cuotas, Agenda, Pendientes, Documentos y Automatizaciones.

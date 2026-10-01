@@ -4,7 +4,7 @@
 Navegador / PWA (React + TS)
  ├─ pages/ y components/   → pantallas (solo presentación y estado de UI)
  ├─ hooks/                 → useAuth, useLoad, useVoice, useReminders
- ├─ services/              → acceso a datos (api.ts), IA (ai.ts), automatización de cuota (tuition.ts), "contale a VIVIA" (brain.ts)
+ ├─ services/              → acceso a datos (api.ts), IA (ai.ts), automatización de cuota (tuition.ts), "hablale a VIVIA" (brain.ts)
  ├─ domain/                → lógica de negocio PURA, sin red ni React → testeable
  │    money.ts · payments.ts · message.ts · tasks.ts · interpret.ts
  └─ pwa/UpdatePrompt.tsx   → aviso y activación de nuevas versiones

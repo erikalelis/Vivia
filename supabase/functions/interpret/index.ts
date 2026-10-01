@@ -1,4 +1,4 @@
-// Edge Function: "Contale a VIVIA" → interpreta texto libre y devuelve ítems estructurados.
+// Edge Function: "Hablale a VIVIA" → interpreta texto libre y devuelve ítems estructurados.
 // Requiere sesión (JWT de Supabase). El cliente valida el resultado antes de guardar.
 import { callClaudeTool, cors, HttpError, json } from '../_shared/anthropic.ts';
 

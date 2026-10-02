@@ -69,7 +69,7 @@ export function MorePage() {
   return (
     <div>
       <h1 className="page-title">Más</h1>
-      <div className="grid gap-3">
+      <div className="grid grid-cols-1 gap-3">
         {MORE.map((n) => <NavLink key={n.to} to={n.to} className="card flex items-center gap-3 text-lg"><span className="text-salvia"><Icon name={n.icon} /></span>{n.label}</NavLink>)}
       </div>
     </div>

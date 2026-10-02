@@ -46,7 +46,7 @@ export default function Home() {
         <button className="btn-soft mb-5 ml-0 w-full md:ml-3 md:w-auto" onClick={() => askNotificationPermission().then(reload)}>Activar recordatorios</button>
       )}
 
-      <div className="grid gap-4 md:grid-cols-2">
+      <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
         <section className="card md:col-span-2">
           <h2 className="mb-2 text-xl">Hoy</h2>
           {vencidas.length > 0 && (

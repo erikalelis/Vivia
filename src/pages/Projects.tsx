@@ -21,7 +21,7 @@ export default function Projects() {
       <h1 className="page-title">Mis proyectos</h1>
       <button className="btn-primary mb-3" onClick={() => setEditing({ status: 'idea', priority: 'media', links: [] })}>+ Nuevo proyecto</button>
       {data.projects.length === 0 ? <Empty>Todavía no tenés proyectos. Empezá con una idea.</Empty> : (
-        <ul className="grid gap-3 md:grid-cols-2">
+        <ul className="grid grid-cols-1 gap-3 md:grid-cols-2">
           {data.projects.map((p) => {
             const mine = data.tasks.filter((t) => t.project_id === p.id);
             const done = mine.filter((t) => t.status === 'completada').length;

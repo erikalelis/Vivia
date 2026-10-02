@@ -33,7 +33,7 @@ export default function Career() {
             <select className="!w-auto" value={kind} onChange={(e) => setKind(e.target.value)}><option value="todas">Todo</option>{KINDS.map((k) => <option key={k.v} value={k.v}>{k.l}</option>)}</select>
           </div>
           {list.length === 0 ? <Empty>Todavía no cargaste nada acá.</Empty> : (
-            <ul className="grid gap-2 md:grid-cols-2">
+            <ul className="grid grid-cols-1 gap-2 md:grid-cols-2">
               {list.map((c) => (
                 <li key={c.id}><button className="card w-full text-left" onClick={() => setEditing(c)}>
                   <p className="text-lg">{c.position || c.company || 'Sin título'}</p>

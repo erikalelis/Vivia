@@ -14,7 +14,7 @@ export default {
       },
       fontFamily: {
         sans: ['"DM Sans"', 'ui-sans-serif', 'system-ui', 'sans-serif'],
-        display: ['Fraunces', 'Georgia', 'serif', 'ui-sans-serif', 'ui-sans-serif', 'system-ui', 'sans-serif']
+        display: ['"Baloo 2"', 'ui-sans-serif', 'system-ui', 'sans-serif']
       },
       borderRadius: { xl2: '1.25rem' },
       boxShadow: { calma: '0 8px 30px -10px rgba(91,63,181,0.25)' }

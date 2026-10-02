@@ -37,7 +37,7 @@ export default function Layout({ children, refreshKey, onChanged }: { children: 
       <aside className="hidden w-64 shrink-0 flex-col gap-1 border-r border-arena bg-white/70 p-4 backdrop-blur md:flex">
         <div className="mb-4 flex items-center gap-3 px-2">
           <FlowerMark size={40} />
-          <div><h1 className="text-2xl leading-none text-salvia-dark">VIVIA</h1><p className="mt-1 text-xs text-suave">Tu vida, en un solo lugar.</p></div>
+          <div><h1 className="text-3xl font-extrabold leading-none text-salvia-dark">VIVIA</h1><p className="mt-1 text-xs text-suave">Tu vida, en un solo lugar.</p></div>
         </div>
         <div className="mb-2">{search}</div>
         <button className="btn-primary mb-3" onClick={() => setDump(true)}><Icon name="mic" size={20} />Hablale a VIVIA</button>

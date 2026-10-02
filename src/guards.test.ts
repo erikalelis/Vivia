@@ -26,7 +26,7 @@ test('los datos importantes no viven en localStorage (solo en la base)', () => {
 test('ninguna clave de API en el código del frontend', () => {
   for (const f of src) {
     const code = readFileSync(f, 'utf8');
-    assert.doesNotMatch(code, /sk-ant-|ANTHROPIC_API_KEY|service_role/i, `${f} expone un secreto`);
+    assert.doesNotMatch(code, /sk-ant-|AIza|ANTHROPIC_API_KEY|GEMINI_API_KEY|service_role/i, `${f} expone un secreto`);
   }
 });
 

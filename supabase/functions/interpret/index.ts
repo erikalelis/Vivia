@@ -1,6 +1,6 @@
 // Edge Function: "Hablale a VIVIA" → interpreta texto libre y devuelve ítems estructurados.
 // Requiere sesión (JWT de Supabase). El cliente valida el resultado antes de guardar.
-import { callClaudeTool, cors, HttpError, json } from '../_shared/anthropic.ts';
+import { callAi, cors, HttpError, json } from '../_shared/ai.ts';
 
 const SYSTEM = `Sos el motor de comprensión de VIVIA, la asistente personal de Érika (Buenos Aires, español rioplatense).
 Recibís lo que ella dijo o escribió y lo convertís en ítems separados: tareas, eventos de agenda o notas.
@@ -59,7 +59,7 @@ Deno.serve(async (req) => {
   try {
     const { text, today, weekday, timezone } = await req.json();
     if (typeof text !== 'string' || !text.trim() || text.length > 4000) throw new HttpError(400, 'El texto está vacío o es demasiado largo.');
-    const result = await callClaudeTool({
+    const result = await callAi({
       system: SYSTEM,
       tool: TOOL,
       content: [{ type: 'text', text: `Hoy es ${weekday ?? ''} ${today} (zona ${timezone ?? 'America/Argentina/Buenos_Aires'}).\n\nLo que dijo Érika:\n"""${text}"""` }]

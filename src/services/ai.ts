@@ -27,7 +27,7 @@ async function invoke<T>(fn: string, body: Record<string, unknown>): Promise<T> 
   return data as T;
 }
 
-/** Implementación con Claude (Anthropic) a través de Edge Functions de Supabase. */
+/** Implementación a través de Edge Functions de Supabase (Gemini gratis o Claude, según la clave del servidor). */
 class ClaudeEdgeProvider implements AiProvider {
   async interpretText(text: string): Promise<InterpretResult> {
     const now = new Date();

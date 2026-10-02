@@ -1,7 +1,7 @@
 // Edge Function: lee el PDF de una cuota y devuelve los datos tal como están impresos.
 // Los importes se devuelven como TEXTO (tal cual figuran); el cliente los convierte a centavos.
 import { createClient } from 'https://esm.sh/@supabase/supabase-js@2';
-import { callClaudeTool, cors, HttpError, json } from '../_shared/anthropic.ts';
+import { callAi, cors, HttpError, json } from '../_shared/ai.ts';
 
 const SYSTEM = `Leés comprobantes de cuota escolar argentinos. Extraé los datos EXACTAMENTE como figuran impresos.
 Reglas críticas:
@@ -63,7 +63,7 @@ Deno.serve(async (req) => {
     const buf = await file.arrayBuffer();
     if (buf.byteLength > 20 * 1024 * 1024) throw new HttpError(413, 'El PDF es demasiado grande (máximo 20 MB).');
 
-    const result = await callClaudeTool({
+    const result = await callAi({
       system: SYSTEM,
       tool: TOOL,
       maxTokens: 3000,

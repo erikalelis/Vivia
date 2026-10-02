@@ -47,6 +47,7 @@ export default function Layout({ children, refreshKey, onChanged }: { children: 
       <main key={refreshKey} className="min-w-0 flex-1 overflow-y-auto p-4 pb-28 md:p-8 md:pb-8">
         <div className="mb-4 md:hidden">{search}</div>
         <div className="mx-auto max-w-5xl">{children}</div>
+        <p className="mt-10 text-center font-display text-[11px] text-suave/70">hecho por Bluvia</p>
       </main>
 
       {/* Móvil: botón de voz siempre visible + navegación inferior */}

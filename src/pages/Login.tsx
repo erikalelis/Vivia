@@ -43,7 +43,6 @@ export default function Login() {
           <img src={`${import.meta.env.BASE_URL}icon.svg`} alt="" className="mx-auto mb-3 h-20 w-20 rounded-3xl shadow-calma" />
           <h1 className="text-5xl font-extrabold text-salvia-dark">VIVIA</h1>
           <p className="text-suave">Tu vida, en un solo lugar.</p>
-          <p className="mt-1 font-display text-sm text-suave">hecho por <span className="text-salvia-dark">Bluvia</span></p>
         </div>
         {!isConfigured && (
           <div className="card mb-4 border border-terracota-soft text-sm text-terracota">
@@ -67,6 +66,7 @@ export default function Login() {
             {mode === 'login' && <button type="button" className="underline" onClick={() => { setMode('forgot'); setMsg(null); }}>Olvidé mi contraseña</button>}
           </div>
         </form>
+        <p className="mt-6 text-center font-display text-[11px] text-suave/70">hecho por Bluvia</p>
       </div>
     </div>
   );

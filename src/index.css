@@ -4,6 +4,9 @@
 
 @layer base {
   html, body, #root { height: 100%; }
+  html { -webkit-text-size-adjust: 100%; overflow-x: hidden; }
+  body { overflow-x: hidden; }
+  @supports (height: 100dvh) { html, body, #root { height: 100dvh; } }
   body { @apply bg-crema text-tinta font-sans antialiased; -webkit-tap-highlight-color: transparent; }
   h1, h2 { @apply font-display font-bold tracking-normal; }
   input, select, textarea { @apply w-full rounded-xl border border-arena bg-white px-3 py-2.5 text-base outline-none focus:border-salvia focus:ring-2 focus:ring-salvia-soft; }

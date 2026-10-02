@@ -32,7 +32,7 @@ export default function Layout({ children, refreshKey, onChanged }: { children: 
   );
 
   return (
-    <div className="flex h-full">
+    <div className="flex h-full w-full overflow-hidden">
       {/* Escritorio: barra lateral */}
       <aside className="hidden w-64 shrink-0 flex-col gap-1 border-r border-arena bg-white/70 p-4 backdrop-blur md:flex">
         <div className="mb-4 flex items-center gap-3 px-2">
@@ -44,7 +44,7 @@ export default function Layout({ children, refreshKey, onChanged }: { children: 
         {[...MAIN, ...MORE].map((n) => <NavLink key={n.to} to={n.to} end={n.to === '/'} className={link}><Icon name={n.icon} />{n.label}</NavLink>)}
       </aside>
 
-      <main key={refreshKey} className="min-w-0 flex-1 overflow-y-auto p-4 pb-28 md:p-8 md:pb-8">
+      <main key={refreshKey} className="min-w-0 flex-1 overflow-y-auto px-4 pb-32 pt-4 md:p-8 md:pb-8">
         <div className="mb-4 md:hidden">{search}</div>
         <div className="mx-auto max-w-5xl">{children}</div>
         <p className="mt-10 text-center font-display text-[11px] text-suave/70">hecho por Bluvia</p>

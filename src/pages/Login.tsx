@@ -37,7 +37,7 @@ export default function Login() {
   }
 
   return (
-    <div className="flex min-h-full items-center justify-center bg-crema p-5">
+    <div className="flex min-h-full items-center justify-center overflow-y-auto bg-crema px-5 py-8">
       <div className="w-full max-w-sm">
         <div className="mb-6 text-center">
           <img src={`${import.meta.env.BASE_URL}icon.svg`} alt="" className="mx-auto mb-3 h-20 w-20 rounded-3xl shadow-calma" />

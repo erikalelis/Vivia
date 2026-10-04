@@ -1,16 +1,16 @@
-import { useNavigate } from 'react-router-dom';
 import Icon from '@/components/Icon';
+import { useBack } from '@/hooks/useBack';
 
 /**
  * Pantalla provisoria de un módulo que se activa en una próxima actualización de Vivia.
  * Se reemplaza módulo por módulo; no guarda nada ni simula funciones.
  */
 export default function Proximo({ titulo, icono, texto }: { titulo: string; icono: string; texto: string }) {
-  const navigate = useNavigate();
+  const goBack = useBack();
   return (
     <div className="flex flex-col gap-6">
       <div className="flex items-center gap-2">
-        <button className="btn-ghost !min-h-[44px] !px-3" onClick={() => navigate('/')} aria-label="Volver al inicio"><Icon name="back" /></button>
+        <button className="btn-ghost !min-h-[44px] !px-3" onClick={goBack} aria-label="Volver al inicio"><Icon name="back" /></button>
         <h1 className="text-2xl md:text-3xl">{titulo}</h1>
       </div>
       <div className="card flex flex-col items-center gap-4 !p-8 text-center">

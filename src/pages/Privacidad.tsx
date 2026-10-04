@@ -1,6 +1,6 @@
 import { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
 import Icon from '@/components/Icon';
+import { useBack } from '@/hooks/useBack';
 import { ErrorBox, Loading } from '@/components/ui';
 import { useLoad } from '@/hooks/useLoad';
 import { friendly } from '@/services/api';
@@ -14,7 +14,7 @@ function download(name: string, content: string) {
 }
 
 export default function Privacidad() {
-  const navigate = useNavigate();
+  const goBack = useBack('/perfil');
   const items = useLoad(listProfile);
   const [msg, setMsg] = useState<{ ok: boolean; text: string } | null>(null);
 
@@ -33,7 +33,7 @@ export default function Privacidad() {
   return (
     <div className="flex flex-col gap-5">
       <div className="flex items-center gap-2">
-        <button className="btn-ghost !min-h-[44px] !px-3" onClick={() => navigate('/perfil')} aria-label="Volver al perfil"><Icon name="back" /></button>
+        <button className="btn-ghost !min-h-[44px] !px-3" onClick={goBack} aria-label="Volver al perfil"><Icon name="back" /></button>
         <h1 className="text-2xl md:text-3xl">Privacidad y datos</h1>
       </div>
 

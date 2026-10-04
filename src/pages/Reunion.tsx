@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
 import Icon from '@/components/Icon';
+import { useBack } from '@/hooks/useBack';
 import { friendly } from '@/services/api';
 import { AiNotAvailableError } from '@/services/ai';
 import { ProfileError } from '@/services/profile';
@@ -13,7 +13,7 @@ const errorText = (e: unknown) => (e instanceof ProfileError || e instanceof AiN
 type Phase = 'idle' | 'recording' | 'paused' | 'working' | 'done';
 
 export default function Reunion() {
-  const navigate = useNavigate();
+  const goBack = useBack();
   const [phase, setPhase] = useState<Phase>('idle');
   const [seconds, setSeconds] = useState(0);
   const [err, setErr] = useState<string | null>(null);
@@ -135,7 +135,7 @@ export default function Reunion() {
   return (
     <div className="flex flex-col gap-5">
       <div className="flex items-center gap-2">
-        <button className="btn-ghost !min-h-[44px] !px-3" onClick={() => navigate('/')} aria-label="Volver al inicio"><Icon name="back" /></button>
+        <button className="btn-ghost !min-h-[44px] !px-3" onClick={goBack} aria-label="Volver al inicio"><Icon name="back" /></button>
         <h1 className="text-2xl md:text-3xl">Reunión</h1>
       </div>
 

@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
 import Icon from '@/components/Icon';
+import { useBack } from '@/hooks/useBack';
 import { useVoice } from '@/hooks/useVoice';
 import { friendly } from '@/services/api';
 import { AiNotAvailableError } from '@/services/ai';
@@ -20,7 +20,7 @@ const SCENARIOS = [
 interface Turn { user: string; ai: EnglishTurn }
 
 export default function Ingles() {
-  const navigate = useNavigate();
+  const goBack = useBack();
   const [scenario, setScenario] = useState<(typeof SCENARIOS)[number] | null>(null);
   const [turns, setTurns] = useState<Turn[]>([]);
   const [input, setInput] = useState('');
@@ -54,7 +54,7 @@ export default function Ingles() {
     return (
       <div className="flex flex-col gap-5">
         <div className="flex items-center gap-2">
-          <button className="btn-ghost !min-h-[44px] !px-3" onClick={() => navigate('/')} aria-label="Volver al inicio"><Icon name="back" /></button>
+          <button className="btn-ghost !min-h-[44px] !px-3" onClick={goBack} aria-label="Volver al inicio"><Icon name="back" /></button>
           <h1 className="text-2xl md:text-3xl">Practicar inglés</h1>
         </div>
         <p className="px-1 text-[15px] text-muted">Elegí una situación. Hablás o escribís en inglés, Vivia te responde simple y te corrige con cariño. Si no sabés cómo decir algo, escribilo en español.</p>

@@ -1,6 +1,6 @@
 import { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
 import Icon from '@/components/Icon';
+import { useBack } from '@/hooks/useBack';
 import { useVoice } from '@/hooks/useVoice';
 import { friendly } from '@/services/api';
 import { AiNotAvailableError } from '@/services/ai';
@@ -12,7 +12,7 @@ const errorText = (e: unknown) => (e instanceof ProfileError || e instanceof AiN
 const TARGETS: ('auto' | Lang)[] = ['auto', 'es', 'en', 'pt'];
 
 export default function Traducir() {
-  const navigate = useNavigate();
+  const goBack = useBack();
   const [text, setText] = useState('');
   const [target, setTarget] = useState<'auto' | Lang>('auto');
   const [res, setRes] = useState<Translation | null>(null);
@@ -35,7 +35,7 @@ export default function Traducir() {
   return (
     <div className="flex flex-col gap-5">
       <div className="flex items-center gap-2">
-        <button className="btn-ghost !min-h-[44px] !px-3" onClick={() => navigate('/')} aria-label="Volver al inicio"><Icon name="back" /></button>
+        <button className="btn-ghost !min-h-[44px] !px-3" onClick={goBack} aria-label="Volver al inicio"><Icon name="back" /></button>
         <h1 className="text-2xl md:text-3xl">Traducir</h1>
       </div>
 

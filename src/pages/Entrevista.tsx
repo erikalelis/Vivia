@@ -1,6 +1,7 @@
 import { useRef, useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import Icon from '@/components/Icon';
+import { useBack } from '@/hooks/useBack';
 import { useVoice } from '@/hooks/useVoice';
 import { friendly } from '@/services/api';
 import { AiNotAvailableError } from '@/services/ai';
@@ -27,7 +28,7 @@ function AnswerCard({ a, title }: { a: { short: string; full: string }; title?: 
 }
 
 export default function Entrevista() {
-  const navigate = useNavigate();
+  const goBack = useBack();
   const [tab, setTab] = useState<'preparar' | 'pregunta'>('preparar');
   const [vacancy, setVacancy] = useState('');
   const [file, setFile] = useState<File | null>(null);
@@ -57,7 +58,7 @@ export default function Entrevista() {
   return (
     <div className="flex flex-col gap-5">
       <div className="flex items-center gap-2">
-        <button className="btn-ghost !min-h-[44px] !px-3" onClick={() => navigate('/')} aria-label="Volver al inicio"><Icon name="back" /></button>
+        <button className="btn-ghost !min-h-[44px] !px-3" onClick={goBack} aria-label="Volver al inicio"><Icon name="back" /></button>
         <h1 className="text-2xl md:text-3xl">Entrevista</h1>
       </div>
 

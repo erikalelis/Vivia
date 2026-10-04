@@ -6,10 +6,10 @@ import Login, { ResetPassword } from '@/pages/Login';
 import Home from '@/pages/Home';
 import Entrevista from '@/pages/Entrevista';
 import Traducir from '@/pages/Traducir';
+import Reunion from '@/pages/Reunion';
 import Ingles from '@/pages/Ingles';
 import Perfil from '@/pages/Perfil';
 import Privacidad from '@/pages/Privacidad';
-import Proximo from '@/pages/Proximo';
 import UpdatePrompt from '@/pwa/UpdatePrompt';
 
 export default function App() {
@@ -31,7 +31,7 @@ export default function App() {
               <Routes>
                 <Route path="/" element={<Home />} />
                 <Route path="/entrevista" element={<Entrevista />} />
-                <Route path="/reunion" element={<Proximo titulo="Reunión" icono="mic" texto="Grabá o subí el audio de una reunión y recibí resumen, decisiones y tareas." />} />
+                <Route path="/reunion" element={<Reunion />} />
                 <Route path="/traducir" element={<Traducir />} />
                 <Route path="/ingles" element={<Ingles />} />
                 <Route path="/perfil" element={<Perfil />} />

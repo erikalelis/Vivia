@@ -5,6 +5,8 @@ import { useAuth } from '@/hooks/useAuth';
 import Login, { ResetPassword } from '@/pages/Login';
 import Home from '@/pages/Home';
 import Entrevista from '@/pages/Entrevista';
+import Traducir from '@/pages/Traducir';
+import Ingles from '@/pages/Ingles';
 import Perfil from '@/pages/Perfil';
 import Privacidad from '@/pages/Privacidad';
 import Proximo from '@/pages/Proximo';
@@ -30,8 +32,8 @@ export default function App() {
                 <Route path="/" element={<Home />} />
                 <Route path="/entrevista" element={<Entrevista />} />
                 <Route path="/reunion" element={<Proximo titulo="Reunión" icono="mic" texto="Grabá o subí el audio de una reunión y recibí resumen, decisiones y tareas." />} />
-                <Route path="/traducir" element={<Proximo titulo="Traducir" icono="translate" texto="Detectá el idioma solo y entendé o respondé en español, inglés o portugués." />} />
-                <Route path="/ingles" element={<Proximo titulo="Practicar inglés" icono="globe" texto="Conversá por voz con Vivia sobre situaciones reales de tu trabajo." />} />
+                <Route path="/traducir" element={<Traducir />} />
+                <Route path="/ingles" element={<Ingles />} />
                 <Route path="/perfil" element={<Perfil />} />
                 <Route path="/privacidad" element={<Privacidad />} />
                 <Route path="*" element={<Navigate to="/" replace />} />

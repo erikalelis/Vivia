@@ -14,7 +14,7 @@ export default defineConfig({
       // "prompt": la app nueva se descarga en segundo plano y NO se activa hasta que
       // la usuaria toca "Actualizar ahora". Los datos viven en Supabase, no en la caché.
       registerType: 'prompt',
-      includeAssets: ['icon.svg', 'apple-touch-icon.png'],
+      includeAssets: ['icon.svg', 'apple-touch-icon-v2.png'],
       manifest: {
         // Identidad de la app instalada: id, start_url y scope NO cambian, así la nueva Vivia
         // se actualiza sobre la misma app del teléfono (no se instala una aparte).
@@ -29,9 +29,9 @@ export default defineConfig({
         background_color: '#FBF7F9',
         theme_color: '#A8245E',
         icons: [
-          { src: 'icon-192.png', sizes: '192x192', type: 'image/png', purpose: 'any' },
-          { src: 'icon-512.png', sizes: '512x512', type: 'image/png', purpose: 'any' },
-          { src: 'icon-maskable-512.png', sizes: '512x512', type: 'image/png', purpose: 'maskable' }
+          { src: 'icon-v2-192.png', sizes: '192x192', type: 'image/png', purpose: 'any' },
+          { src: 'icon-v2-512.png', sizes: '512x512', type: 'image/png', purpose: 'any' },
+          { src: 'icon-v2-maskable-512.png', sizes: '512x512', type: 'image/png', purpose: 'maskable' }
         ]
       },
       workbox: {

@@ -16,6 +16,8 @@ export interface AiProvider {
   extractProfile(input: { text?: string; pdfBase64?: string }): Promise<unknown>;
   /** Ayuda de entrevista (preparar una vacante o responder una pregunta). Devuelve la respuesta cruda: se valida en domain/interview. */
   interview(body: Record<string, unknown>): Promise<unknown>;
+  /** Traducción y práctica de inglés. Devuelve la respuesta cruda: se valida en domain/language. */
+  language(body: Record<string, unknown>): Promise<unknown>;
 }
 
 export class AiNotAvailableError extends Error {}
@@ -39,6 +41,10 @@ class ClaudeEdgeProvider implements AiProvider {
     const weekday = new Intl.DateTimeFormat('es-AR', { weekday: 'long', timeZone: 'America/Argentina/Buenos_Aires' }).format(now);
     const raw = await invoke<unknown>('interpret', { text, today: date, weekday, timezone: 'America/Argentina/Buenos_Aires' });
     return validateInterpretation(raw);
+  }
+
+  async language(body: Record<string, unknown>): Promise<unknown> {
+    return invoke<unknown>('language', body);
   }
 
   async interview(body: Record<string, unknown>): Promise<unknown> {

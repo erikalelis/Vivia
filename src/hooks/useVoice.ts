@@ -3,7 +3,7 @@ import { useCallback, useEffect, useRef, useState } from 'react';
 // Dictado del navegador (Web Speech API). Funciona en Chrome/Edge/Safari; no en todos los navegadores.
 type Rec = { lang: string; continuous: boolean; interimResults: boolean; start(): void; stop(): void; onresult: ((e: any) => void) | null; onerror: ((e: any) => void) | null; onend: (() => void) | null };
 
-export function useVoice(onFinal: (text: string) => void) {
+export function useVoice(onFinal: (text: string) => void, lang = 'es-AR') {
   const SR = (typeof window !== 'undefined' && ((window as any).SpeechRecognition || (window as any).webkitSpeechRecognition)) as (new () => Rec) | false;
   const supported = Boolean(SR);
   const [listening, setListening] = useState(false);
@@ -19,7 +19,7 @@ export function useVoice(onFinal: (text: string) => void) {
     if (!SR) return;
     setError(null); setInterim('');
     const r = new SR();
-    r.lang = 'es-AR'; r.continuous = true; r.interimResults = true;
+    r.lang = lang; r.continuous = true; r.interimResults = true;
     r.onresult = (e: any) => {
       let fin = ''; let tmp = '';
       for (let i = e.resultIndex; i < e.results.length; i++) {
@@ -35,7 +35,7 @@ export function useVoice(onFinal: (text: string) => void) {
     };
     r.onend = () => { setListening(false); setInterim(''); };
     rec.current = r; r.start(); setListening(true);
-  }, [SR]);
+  }, [SR, lang]);
 
   useEffect(() => () => rec.current?.stop(), []);
   return { supported, listening, interim, error, start, stop };

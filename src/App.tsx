@@ -4,6 +4,7 @@ import { VivMark } from '@/components/Icon';
 import { useAuth } from '@/hooks/useAuth';
 import Login, { ResetPassword } from '@/pages/Login';
 import Home from '@/pages/Home';
+import Entrevista from '@/pages/Entrevista';
 import Perfil from '@/pages/Perfil';
 import Privacidad from '@/pages/Privacidad';
 import Proximo from '@/pages/Proximo';
@@ -27,7 +28,7 @@ export default function App() {
             <Layout>
               <Routes>
                 <Route path="/" element={<Home />} />
-                <Route path="/entrevista" element={<Proximo titulo="Entrevista" icono="chat" texto="Prepará entrevistas con respuestas basadas en tu perfil profesional real." />} />
+                <Route path="/entrevista" element={<Entrevista />} />
                 <Route path="/reunion" element={<Proximo titulo="Reunión" icono="mic" texto="Grabá o subí el audio de una reunión y recibí resumen, decisiones y tareas." />} />
                 <Route path="/traducir" element={<Proximo titulo="Traducir" icono="translate" texto="Detectá el idioma solo y entendé o respondé en español, inglés o portugués." />} />
                 <Route path="/ingles" element={<Proximo titulo="Practicar inglés" icono="globe" texto="Conversá por voz con Vivia sobre situaciones reales de tu trabajo." />} />

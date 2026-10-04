@@ -70,25 +70,25 @@ function toBase64(file: File): Promise<string> {
   });
 }
 
-/** Lee un CV (PDF, Word o texto) y devuelve los elementos del perfil. El archivo NO se guarda: solo se usa para leerlo. */
-export async function extractFromFile(file: File): Promise<ProfileDraft[]> {
+/** Lee un documento (PDF, Word o texto) y devuelve su contenido listo para la IA. El archivo NO se guarda. */
+export async function readDocument(file: File): Promise<{ text?: string; pdfBase64?: string }> {
   if (file.size > MAX_BYTES) throw new ProfileError('El archivo es demasiado grande (máximo 10 MB).');
   const name = file.name.toLowerCase();
-  let raw: unknown;
-  if (file.type === 'application/pdf' || name.endsWith('.pdf')) {
-    raw = await ai.extractProfile({ pdfBase64: await toBase64(file) });
-  } else if (name.endsWith('.docx')) {
+  if (file.type === 'application/pdf' || name.endsWith('.pdf')) return { pdfBase64: await toBase64(file) };
+  if (name.endsWith('.docx')) {
     const mod: any = await import('mammoth/mammoth.browser');
     const mammoth = mod.default ?? mod;
     const { value } = await mammoth.extractRawText({ arrayBuffer: await file.arrayBuffer() });
     if (!String(value).trim()) throw new ProfileError('No encontré texto en ese documento de Word.');
-    raw = await ai.extractProfile({ text: String(value).slice(0, MAX_TEXT * 2) });
-  } else if (file.type.startsWith('text/') || name.endsWith('.txt')) {
-    raw = await ai.extractProfile({ text: (await file.text()).slice(0, MAX_TEXT * 2) });
-  } else {
-    throw new ProfileError('Usá un archivo PDF, Word (.docx) o de texto.');
+    return { text: String(value).slice(0, MAX_TEXT * 2) };
   }
-  return validateProfileExtraction(raw);
+  if (file.type.startsWith('text/') || name.endsWith('.txt')) return { text: (await file.text()).slice(0, MAX_TEXT * 2) };
+  throw new ProfileError('Usá un archivo PDF, Word (.docx) o de texto.');
+}
+
+/** Lee un CV (PDF, Word o texto) y devuelve los elementos del perfil. */
+export async function extractFromFile(file: File): Promise<ProfileDraft[]> {
+  return validateProfileExtraction(await ai.extractProfile(await readDocument(file)));
 }
 
 /**

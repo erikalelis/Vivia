@@ -14,6 +14,8 @@ export interface AiProvider {
   extractTuitionPdf(storagePath: string): Promise<PaymentExtraction & { concept?: string | null; notes?: string | null }>;
   /** Estructura un CV (PDF en base64) o un texto en elementos del perfil profesional. Devuelve la respuesta cruda: se valida en domain/profile. */
   extractProfile(input: { text?: string; pdfBase64?: string }): Promise<unknown>;
+  /** Ayuda de entrevista (preparar una vacante o responder una pregunta). Devuelve la respuesta cruda: se valida en domain/interview. */
+  interview(body: Record<string, unknown>): Promise<unknown>;
 }
 
 export class AiNotAvailableError extends Error {}
@@ -37,6 +39,10 @@ class ClaudeEdgeProvider implements AiProvider {
     const weekday = new Intl.DateTimeFormat('es-AR', { weekday: 'long', timeZone: 'America/Argentina/Buenos_Aires' }).format(now);
     const raw = await invoke<unknown>('interpret', { text, today: date, weekday, timezone: 'America/Argentina/Buenos_Aires' });
     return validateInterpretation(raw);
+  }
+
+  async interview(body: Record<string, unknown>): Promise<unknown> {
+    return invoke<unknown>('interview', body);
   }
 
   async extractProfile(input: { text?: string; pdfBase64?: string }): Promise<unknown> {

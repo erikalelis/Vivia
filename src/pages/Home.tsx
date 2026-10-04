@@ -1,93 +1,75 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
-import { Empty, ErrorBox, fmtDate, Loading } from '@/components/ui';
-import BrainDump from '@/components/BrainDump';
-import { effectiveStatus, filterTasks, isClosed, nowInBuenosAires } from '@/domain/tasks';
-import { useLoad } from '@/hooks/useLoad';
-import { careerRepo, documentsRepo, eventsRepo, getSettings, paymentsRepo, projectsRepo, tasksRepo } from '@/services/api';
-import { askNotificationPermission } from '@/hooks/useReminders';
-import Icon from '@/components/Icon';
+import Icon, { VivMark } from '@/components/Icon';
+import { useAuth } from '@/hooks/useAuth';
+import { getSettings } from '@/services/api';
 
-function greeting(): string {
-  const h = Number(nowInBuenosAires().time.slice(0, 2));
-  return h < 6 ? 'Buenas noches' : h < 13 ? 'Buenos días' : h < 20 ? 'Buenas tardes' : 'Buenas noches';
+/** Nombre para el saludo: se usa solo si la persona lo cargó (no el que sale del correo). */
+function greetingName(display: string | null | undefined, email: string | undefined): string {
+  const d = (display ?? '').trim();
+  const local = (email ?? '').split('@')[0] ?? '';
+  if (!d || d.toLowerCase() === local.toLowerCase() || /[._\d@]/.test(d)) return '';
+  return d.split(' ')[0] ?? '';
 }
 
+const CARDS = [
+  { to: '/traducir', icon: 'translate', title: 'Traducir', text: 'Entendé y respondé en otro idioma.', tone: 'lake' },
+  { to: '/reunion', icon: 'mic', title: 'Reunión', text: 'Grabá y convertí todo en tareas.', tone: 'berry' },
+  { to: '/ingles', icon: 'globe', title: 'Practicar inglés', text: 'Conversá por voz sobre tu trabajo.', tone: 'berry' },
+  { to: '/perfil', icon: 'user', title: 'Mi perfil profesional', text: 'CV, experiencia y logros.', tone: 'lake' }
+];
+
 export default function Home() {
-  const [dump, setDump] = useState(false);
-  const { data, loading, error, reload } = useLoad(async () => {
-    const [settings, tasks, events, projects, career, docs, payments] = await Promise.all([
-      getSettings(), tasksRepo.list(), eventsRepo.list(), projectsRepo.list(), careerRepo.list(), documentsRepo.list(), paymentsRepo.list()
-    ]);
-    return { settings, tasks, events, projects, career, docs, payments };
-  });
+  const { session } = useAuth();
+  const [name, setName] = useState('');
 
-  if (loading) return <Loading />;
-  if (error || !data) return <ErrorBox message={error ?? 'No pude cargar el resumen.'} onRetry={reload} />;
-
-  const { settings, tasks, events, projects, career, docs, payments } = data;
-  const today = nowInBuenosAires().date;
-  const hoy = filterTasks(tasks, 'hoy');
-  const vencidas = filterTasks(tasks, 'vencidas');
-  const eventosHoy = events.filter((e) => e.starts_at.slice(0, 10) === today || new Date(e.starts_at).toLocaleDateString('en-CA', { timeZone: 'America/Argentina/Buenos_Aires' }) === today);
-  const proximos = events.filter((e) => new Date(e.starts_at) > new Date()).slice(0, 3);
-  const miaOpen = tasks.filter((t) => t.module === 'mia' && !isClosed(t));
-  const lastPay = payments[0];
-  const careerOpen = tasks.filter((t) => t.module === 'carrera' && !isClosed(t));
-  const activeProjects = projects.filter((p) => !['finalizado', 'pausado', 'idea'].includes(p.status));
-  const toReview = docs.filter((d) => !d.related_id).slice(0, 3);
+  useEffect(() => {
+    let alive = true;
+    getSettings()
+      .then((s) => { if (alive) setName(greetingName(s.display_name, session?.user.email)); })
+      .catch(() => { /* sin nombre: el saludo queda genérico */ });
+    return () => { alive = false; };
+  }, [session?.user.email]);
 
   return (
-    <div>
-      <h1 className="page-title">{greeting()}, {settings.display_name ?? ''}</h1>
+    <div className="flex flex-col gap-6 md:gap-8">
+      <header className="flex items-center justify-between md:hidden">
+        <VivMark size={36} />
+      </header>
 
-      <button className="btn-primary mb-5 w-full !rounded-2xl !py-5 text-lg font-semibold tracking-wide md:w-auto md:!px-10" onClick={() => setDump(true)}><Icon name="mic" size={24} />HABLALE A VIVIA</button>
-      {typeof Notification !== 'undefined' && Notification.permission === 'default' && (
-        <button className="btn-soft mb-5 ml-0 w-full md:ml-3 md:w-auto" onClick={() => askNotificationPermission().then(reload)}>Activar recordatorios</button>
-      )}
-
-      <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
-        <section className="card md:col-span-2">
-          <h2 className="mb-2 text-xl">Hoy</h2>
-          {vencidas.length > 0 && (
-            <Link to="/pendientes" className="mb-3 block rounded-xl bg-terracota-soft p-3 text-terracota">🔴 {vencidas.length} {vencidas.length === 1 ? 'cosa vencida' : 'cosas vencidas'} esperando tu decisión</Link>
-          )}
-          {hoy.length + eventosHoy.length === 0 ? <Empty>Nada programado para hoy.</Empty> : (
-            <ul className="space-y-1.5">
-              {eventosHoy.map((e) => <li key={e.id}>📅 {e.title} <span className="text-suave">{e.all_day ? '' : new Date(e.starts_at).toLocaleTimeString('es-AR', { hour: '2-digit', minute: '2-digit', timeZone: 'America/Argentina/Buenos_Aires' })}</span></li>)}
-              {hoy.map((t) => <li key={t.id}>✅ {t.title} <span className="text-suave">{t.due_time?.slice(0, 5) ?? ''}</span></li>)}
-            </ul>
-          )}
-          {proximos.length > 0 && (<><h3 className="mb-1 mt-4 text-sm text-suave">Próximas fechas</h3>
-            <ul className="space-y-1">{proximos.map((e) => <li key={e.id} className="text-sm">{fmtDate(e.starts_at)} · {e.title}</li>)}</ul></>)}
-        </section>
-
-        <Link to="/mia" className="card">
-          <h2 className="mb-1 text-xl">Mia</h2>
-          <p>{miaOpen.length} {miaOpen.length === 1 ? 'pendiente' : 'pendientes'}{miaOpen.filter((t) => effectiveStatus(t) === 'vencida').length > 0 && <span className="text-terracota"> · {miaOpen.filter((t) => effectiveStatus(t) === 'vencida').length} vencidos</span>}</p>
-          <p className="text-sm text-suave">{lastPay ? `Última cuota: ${lastPay.status === 'enviado' ? 'enviada' : lastPay.status === 'listo_para_enviar' ? 'lista para enviar' : 'pendiente de revisar'}` : 'Todavía no cargaste ninguna cuota.'}</p>
-        </Link>
-
-        <Link to="/carrera" className="card">
-          <h2 className="mb-1 text-xl">Carrera</h2>
-          <p>{career.filter((c) => !['rechazado', 'descartado'].includes(c.status)).length} postulaciones activas</p>
-          <p className="text-sm text-suave">{careerOpen.length} tareas profesionales abiertas</p>
-        </Link>
-
-        <Link to="/proyectos" className="card">
-          <h2 className="mb-1 text-xl">Proyectos</h2>
-          <p>{activeProjects.length} {activeProjects.length === 1 ? 'proyecto activo' : 'proyectos activos'}</p>
-          <p className="truncate text-sm text-suave">{activeProjects[0]?.name ?? 'Sin proyectos en marcha.'}</p>
-        </Link>
-
-        <Link to="/documentos" className="card">
-          <h2 className="mb-1 text-xl">Documentos</h2>
-          <p>{docs.length} guardados</p>
-          <p className="truncate text-sm text-suave">{toReview.length ? `Sin clasificar: ${toReview.map((d) => d.name).join(', ')}` : 'Todo en orden.'}</p>
-        </Link>
+      <div className="flex flex-col gap-1.5">
+        <p className="text-base text-muted md:text-lg">{name ? `Hola, ${name}` : 'Hola'}</p>
+        <h1 className="text-[2.2rem] leading-[1.08] md:text-5xl">¿Qué necesitás hacer hoy?</h1>
       </div>
 
-      {dump && <BrainDump onClose={() => setDump(false)} onSaved={reload} />}
+      <div className="grid grid-cols-2 gap-3 md:grid-cols-3 md:gap-5">
+        <Link
+          to="/entrevista"
+          className="col-span-2 flex min-h-[190px] flex-col justify-between gap-4 rounded-xl3 bg-berry p-5 text-white transition active:scale-[0.99] md:min-h-[200px] md:p-8"
+        >
+          <span className="flex h-[46px] w-[46px] items-center justify-center rounded-full bg-white/20"><Icon name="chat" size={24} /></span>
+          <span className="flex flex-col gap-1">
+            <span className="font-display text-[1.65rem] font-bold md:text-3xl">Entrevista</span>
+            <span className="max-w-md text-[15px] leading-snug text-berry-soft md:text-[17px]">Prepará tu próxima entrevista con respuestas basadas en tu experiencia real.</span>
+          </span>
+        </Link>
+
+        {CARDS.map((c) => (
+          <Link
+            key={c.to}
+            to={c.to}
+            className="flex min-h-[112px] flex-col justify-between gap-3 rounded-xl2 border border-line bg-white p-4 shadow-calma transition active:scale-[0.99] md:min-h-[200px] md:rounded-xl3 md:p-8"
+          >
+            <span className={`flex h-10 w-10 items-center justify-center rounded-full md:h-[52px] md:w-[52px] ${c.tone === 'lake' ? 'bg-lake-soft text-lake' : 'bg-berry-soft text-berry'}`}>
+              <Icon name={c.icon} size={22} />
+            </span>
+            <span>
+              <span className="block text-base font-bold md:text-xl">{c.title}</span>
+              <span className="mt-0.5 block text-[13px] leading-snug text-muted md:text-[15px]">{c.text}</span>
+            </span>
+          </Link>
+        ))}
+      </div>
     </div>
   );
 }

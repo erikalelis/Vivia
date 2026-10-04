@@ -20,7 +20,7 @@ export default function UpdatePrompt() {
   if (!needRefresh) return null;
   return (
     <div role="status" className="fixed inset-x-3 top-3 z-50 mx-auto flex max-w-md items-center justify-between gap-3 rounded-xl2 bg-tinta px-4 py-3 text-white shadow-calma">
-      <span className="text-sm">✨ Nueva versión de VIVIA disponible.</span>
+      <span className="text-sm">Hay una nueva versión de Vivia.</span>
       <button className="btn-primary !py-1.5 text-sm" onClick={() => updateServiceWorker(true)}>Actualizar ahora</button>
     </div>
   );

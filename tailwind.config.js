@@ -4,20 +4,29 @@ export default {
   theme: {
     extend: {
       colors: {
-        crema: '#F6F2FF',
-        arena: '#E8E0FA',
-        salvia: { DEFAULT: '#7C5CD6', dark: '#5B3FB5', soft: '#ECE5FC' },
-        terracota: { DEFAULT: '#E0557A', soft: '#FDE8EE' },
-        lila: '#B28CF0',
-        tinta: '#2E2547',
-        suave: '#75699a'
+        // Identidad de Vivia
+        berry: { DEFAULT: '#A8245E', dark: '#7A1646', soft: '#F7E7EF' },
+        ink: '#1F1A2E',
+        muted: '#6B6480',
+        mist: '#FBF7F9',
+        line: '#ECE3E9',
+        lake: { DEFAULT: '#2A7A80', dark: '#1E5C61', soft: '#E3F1F1' },
+        rec: '#D8322F',
+        // Nombres anteriores: se mantienen como alias hasta terminar de limpiar el código viejo
+        crema: '#FBF7F9',
+        arena: '#ECE3E9',
+        salvia: { DEFAULT: '#A8245E', dark: '#7A1646', soft: '#F7E7EF' },
+        terracota: { DEFAULT: '#B3261E', soft: '#FDE8E7' },
+        lila: '#D9B3C5',
+        tinta: '#1F1A2E',
+        suave: '#6B6480'
       },
       fontFamily: {
-        sans: ['"DM Sans"', 'ui-sans-serif', 'system-ui', 'sans-serif'],
-        display: ['"Baloo 2"', 'ui-sans-serif', 'system-ui', 'sans-serif']
+        sans: ['Figtree', 'ui-sans-serif', 'system-ui', 'sans-serif'],
+        display: ['"Bricolage Grotesque"', 'ui-sans-serif', 'system-ui', 'sans-serif']
       },
-      borderRadius: { xl2: '1.25rem' },
-      boxShadow: { calma: '0 8px 30px -10px rgba(91,63,181,0.25)' }
+      borderRadius: { xl2: '1.375rem', xl3: '1.75rem' },
+      boxShadow: { calma: '0 1px 2px rgba(31,26,46,0.05)', lift: '0 8px 20px rgba(31,26,46,0.18)' }
     }
   },
   plugins: []

@@ -1,28 +1,18 @@
-import { useState } from 'react';
 import { Navigate, Route, Routes, useNavigate } from 'react-router-dom';
-import Layout, { MorePage } from '@/components/Layout';
+import Layout from '@/components/Layout';
+import { VivMark } from '@/components/Icon';
 import { useAuth } from '@/hooks/useAuth';
-import { useReminderNotifications } from '@/hooks/useReminders';
 import Login, { ResetPassword } from '@/pages/Login';
 import Home from '@/pages/Home';
-import Tasks from '@/pages/Tasks';
-import Agenda from '@/pages/Agenda';
-import Mia from '@/pages/Mia';
-import Career from '@/pages/Career';
-import Projects from '@/pages/Projects';
-import Documents from '@/pages/Documents';
-import Automations from '@/pages/Automations';
-import SearchPage from '@/pages/Search';
-import SettingsPage from '@/pages/Settings';
+import Perfil from '@/pages/Perfil';
+import Proximo from '@/pages/Proximo';
 import UpdatePrompt from '@/pwa/UpdatePrompt';
 
 export default function App() {
   const { session, loading } = useAuth();
-  const [refreshKey, setRefreshKey] = useState(0);
   const navigate = useNavigate();
-  useReminderNotifications(Boolean(session));
 
-  if (loading) return <div className="flex h-full items-center justify-center text-3xl text-salvia-dark font-display">VIVIA</div>;
+  if (loading) return <div className="flex h-full items-center justify-center bg-mist"><VivMark size={72} /></div>;
 
   return (
     <>
@@ -33,19 +23,14 @@ export default function App() {
           <Route path="*" element={<Login />} />
         ) : (
           <Route path="*" element={
-            <Layout refreshKey={refreshKey} onChanged={() => setRefreshKey((k) => k + 1)}>
+            <Layout>
               <Routes>
                 <Route path="/" element={<Home />} />
-                <Route path="/pendientes" element={<Tasks />} />
-                <Route path="/agenda" element={<Agenda />} />
-                <Route path="/mia" element={<Mia />} />
-                <Route path="/carrera" element={<Career />} />
-                <Route path="/proyectos" element={<Projects />} />
-                <Route path="/documentos" element={<Documents />} />
-                <Route path="/automatizaciones" element={<Automations />} />
-                <Route path="/buscar" element={<SearchPage />} />
-                <Route path="/ajustes" element={<SettingsPage />} />
-                <Route path="/mas" element={<MorePage />} />
+                <Route path="/entrevista" element={<Proximo titulo="Entrevista" icono="chat" texto="Prepará entrevistas con respuestas basadas en tu perfil profesional real." />} />
+                <Route path="/reunion" element={<Proximo titulo="Reunión" icono="mic" texto="Grabá o subí el audio de una reunión y recibí resumen, decisiones y tareas." />} />
+                <Route path="/traducir" element={<Proximo titulo="Traducir" icono="translate" texto="Detectá el idioma solo y entendé o respondé en español, inglés o portugués." />} />
+                <Route path="/ingles" element={<Proximo titulo="Practicar inglés" icono="globe" texto="Conversá por voz con Vivia sobre situaciones reales de tu trabajo." />} />
+                <Route path="/perfil" element={<Perfil />} />
                 <Route path="*" element={<Navigate to="/" replace />} />
               </Routes>
             </Layout>

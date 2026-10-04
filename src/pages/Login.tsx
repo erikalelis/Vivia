@@ -1,5 +1,6 @@
 import { useState, type FormEvent } from 'react';
 import { supabase, isConfigured } from '@/lib/supabase';
+import { VivMark } from '@/components/Icon';
 
 export default function Login() {
   const [mode, setMode] = useState<'login' | 'register' | 'forgot'>('login');
@@ -37,12 +38,12 @@ export default function Login() {
   }
 
   return (
-    <div className="flex min-h-full items-center justify-center overflow-y-auto bg-crema px-5 py-8">
+    <div className="flex min-h-full items-center justify-center overflow-y-auto bg-mist px-5 py-8">
       <div className="w-full max-w-sm">
         <div className="mb-6 text-center">
-          <img src={`${import.meta.env.BASE_URL}icon.svg`} alt="" className="mx-auto mb-3 h-20 w-20 rounded-3xl shadow-calma" />
-          <h1 className="text-5xl font-extrabold text-salvia-dark">VIVIA</h1>
-          <p className="text-suave">Tu vida, en un solo lugar.</p>
+          <VivMark size={80} tile className="mx-auto mb-3" />
+          <h1 className="text-5xl text-ink">Vivia</h1>
+          <p className="text-muted">Tu asistente profesional con IA.</p>
         </div>
         {!isConfigured && (
           <div className="card mb-4 border border-terracota-soft text-sm text-terracota">
@@ -66,7 +67,7 @@ export default function Login() {
             {mode === 'login' && <button type="button" className="underline" onClick={() => { setMode('forgot'); setMsg(null); }}>Olvidé mi contraseña</button>}
           </div>
         </form>
-        <p className="mt-6 text-center font-display text-[11px] text-suave/70">hecho por Bluvia</p>
+        <p className="mt-6 text-center text-[11px] text-muted">Hecho por Bluvia</p>
       </div>
     </div>
   );

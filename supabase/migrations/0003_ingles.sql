@@ -3,7 +3,7 @@ create table if not exists english_mistakes (
   id uuid primary key default gen_random_uuid(),
   user_id uuid not null references auth.users(id) on delete cascade,
   wrong text not null,
-  right text not null,
+  "right" text not null,
   why text,
   created_at timestamptz not null default now()
 );

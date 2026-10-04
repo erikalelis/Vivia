@@ -33,13 +33,14 @@ export default function Home() {
 
   return (
     <div className="flex flex-col gap-6 md:gap-8">
-      <header className="flex items-center justify-between md:hidden">
-        <VivMark size={36} />
+      <header className="flex items-center gap-2.5 md:hidden">
+        <VivMark size={44} />
+        <span className="font-display text-[1.75rem] font-bold tracking-tight">Vivia</span>
       </header>
 
       <div className="flex flex-col gap-1.5">
-        <p className="text-base text-muted md:text-lg">{name ? `Hola, ${name}` : 'Hola'}</p>
-        <h1 className="text-[2.2rem] leading-[1.08] md:text-5xl">¿Qué necesitás hacer hoy?</h1>
+        <p className="text-[1.35rem] font-semibold text-berry md:text-2xl">{name ? `Hola, ${name}` : 'Hola'}</p>
+        <h1 className="text-[1.95rem] leading-[1.12] md:text-5xl">¿Qué necesitás hacer hoy?</h1>
       </div>
 
       <div className="grid grid-cols-2 gap-3 md:grid-cols-3 md:gap-5">

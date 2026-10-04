@@ -22,25 +22,16 @@ export default function Icon({ name, size = 22, className = '' }: { name: keyof 
   );
 }
 
-/** Símbolo de Vivia: globo de conversación con una V que sube y termina en un punto de luz. */
+/** Símbolo de Vivia: dos hojas (frambuesa y lago) que brotan juntas formando una V. */
 export function VivMark({ size = 36, tile = false, className = '' }: { size?: number; tile?: boolean; className?: string }) {
-  if (tile) {
-    return (
-      <svg width={size} height={size} viewBox="0 0 120 120" className={className} role="img" aria-label="Vivia">
-        <rect width="120" height="120" rx="28" fill="#A8245E" />
-        <g transform="translate(24 22) scale(.64)">
-          <path d="M32 18h56a16 16 0 0 1 16 16v38a16 16 0 0 1-16 16H66L44 108V88H32a16 16 0 0 1-16-16V34a16 16 0 0 1 16-16z" fill="#fff" />
-          <path d="M40 40l17 26 21-31" fill="none" stroke="#A8245E" strokeWidth="10" strokeLinecap="round" strokeLinejoin="round" />
-          <circle cx="80" cy="33" r="7.5" fill="#2A7A80" />
-        </g>
-      </svg>
-    );
-  }
   return (
     <svg width={size} height={size} viewBox="0 0 120 120" className={className} role="img" aria-label="Vivia">
-      <path d="M32 18h56a16 16 0 0 1 16 16v38a16 16 0 0 1-16 16H66L44 108V88H32a16 16 0 0 1-16-16V34a16 16 0 0 1 16-16z" fill="#A8245E" />
-      <path d="M40 40l17 26 21-31" fill="none" stroke="#fff" strokeWidth="10" strokeLinecap="round" strokeLinejoin="round" />
-      <circle cx="80" cy="33" r="7.5" fill="#9BE3DC" />
+      {tile && <rect width="120" height="120" rx="28" fill="#FBF7F9" />}
+      <g transform="translate(60 90)">
+        <path transform="rotate(-32)" d="M0.0 -0.0 L1.3 -1.6 L2.6 -3.1 L3.9 -4.6 L5.2 -6.2 L6.4 -7.8 L7.5 -9.3 L8.6 -10.8 L9.7 -12.4 L10.7 -14.0 L11.6 -15.5 L12.4 -17.1 L13.1 -18.6 L13.8 -20.2 L14.4 -21.7 L14.8 -23.2 L15.2 -24.8 L15.5 -26.3 L15.7 -27.9 L15.7 -29.4 L15.7 -31.0 L15.6 -32.6 L15.4 -34.1 L15.1 -35.6 L14.7 -37.2 L14.2 -38.8 L13.7 -40.3 L13.0 -41.9 L12.3 -43.4 L11.5 -44.9 L10.7 -46.5 L9.8 -48.1 L8.8 -49.6 L7.8 -51.1 L6.7 -52.7 L5.7 -54.2 L4.5 -55.8 L3.4 -57.4 L2.3 -58.9 L1.1 -60.4 L0.0 -62.0 L-0.0 -62.0 L-1.1 -60.4 L-2.3 -58.9 L-3.4 -57.4 L-4.5 -55.8 L-5.7 -54.2 L-6.7 -52.7 L-7.8 -51.1 L-8.8 -49.6 L-9.8 -48.1 L-10.7 -46.5 L-11.5 -44.9 L-12.3 -43.4 L-13.0 -41.9 L-13.7 -40.3 L-14.2 -38.8 L-14.7 -37.2 L-15.1 -35.6 L-15.4 -34.1 L-15.6 -32.6 L-15.7 -31.0 L-15.7 -29.4 L-15.7 -27.9 L-15.5 -26.3 L-15.2 -24.8 L-14.8 -23.2 L-14.4 -21.7 L-13.8 -20.2 L-13.1 -18.6 L-12.4 -17.1 L-11.6 -15.5 L-10.7 -14.0 L-9.7 -12.4 L-8.6 -10.8 L-7.5 -9.3 L-6.4 -7.8 L-5.2 -6.2 L-3.9 -4.6 L-2.6 -3.1 L-1.3 -1.6 L-0.0 -0.0Z" fill="#C42F7F" />
+        <path transform="rotate(32)" d="M0.0 -0.0 L1.3 -1.6 L2.6 -3.1 L3.9 -4.6 L5.2 -6.2 L6.4 -7.8 L7.5 -9.3 L8.6 -10.8 L9.7 -12.4 L10.7 -14.0 L11.6 -15.5 L12.4 -17.1 L13.1 -18.6 L13.8 -20.2 L14.4 -21.7 L14.8 -23.2 L15.2 -24.8 L15.5 -26.3 L15.7 -27.9 L15.7 -29.4 L15.7 -31.0 L15.6 -32.6 L15.4 -34.1 L15.1 -35.6 L14.7 -37.2 L14.2 -38.8 L13.7 -40.3 L13.0 -41.9 L12.3 -43.4 L11.5 -44.9 L10.7 -46.5 L9.8 -48.1 L8.8 -49.6 L7.8 -51.1 L6.7 -52.7 L5.7 -54.2 L4.5 -55.8 L3.4 -57.4 L2.3 -58.9 L1.1 -60.4 L0.0 -62.0 L-0.0 -62.0 L-1.1 -60.4 L-2.3 -58.9 L-3.4 -57.4 L-4.5 -55.8 L-5.7 -54.2 L-6.7 -52.7 L-7.8 -51.1 L-8.8 -49.6 L-9.8 -48.1 L-10.7 -46.5 L-11.5 -44.9 L-12.3 -43.4 L-13.0 -41.9 L-13.7 -40.3 L-14.2 -38.8 L-14.7 -37.2 L-15.1 -35.6 L-15.4 -34.1 L-15.6 -32.6 L-15.7 -31.0 L-15.7 -29.4 L-15.7 -27.9 L-15.5 -26.3 L-15.2 -24.8 L-14.8 -23.2 L-14.4 -21.7 L-13.8 -20.2 L-13.1 -18.6 L-12.4 -17.1 L-11.6 -15.5 L-10.7 -14.0 L-9.7 -12.4 L-8.6 -10.8 L-7.5 -9.3 L-6.4 -7.8 L-5.2 -6.2 L-3.9 -4.6 L-2.6 -3.1 L-1.3 -1.6 L-0.0 -0.0Z" fill="#2A9AA1" />
+        <circle r="4" fill="#7A1646" />
+      </g>
     </svg>
   );
 }

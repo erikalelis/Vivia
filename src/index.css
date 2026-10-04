@@ -4,7 +4,7 @@
 
 @layer base {
   html, body, #root { height: 100%; }
-  html { -webkit-text-size-adjust: 100%; overflow-x: hidden; }
+  html { -webkit-text-size-adjust: 100%; overflow-x: hidden; font-size: 106.25%; }
   body { overflow-x: hidden; }
   @supports (height: 100dvh) { html, body, #root { height: 100dvh; } }
   body { @apply bg-mist text-ink font-sans antialiased; -webkit-tap-highlight-color: transparent; }

@@ -38,3 +38,11 @@ export function formatClock(totalSeconds: number): string {
   const mm = String(m).padStart(2, '0'), ss = String(sec).padStart(2, '0');
   return h > 0 ? `${h}:${mm}:${ss}` : `${mm}:${ss}`;
 }
+
+/** Título corto para la lista de reuniones guardadas. */
+export function meetingTitle(m: MeetingResult, date: Date): string {
+  const first = m.summary.split(/(?<=[.!?])\s/)[0]?.trim() ?? '';
+  const when = new Intl.DateTimeFormat('es-AR', { day: 'numeric', month: 'short', timeZone: 'America/Argentina/Buenos_Aires' }).format(date);
+  const head = first.length > 60 ? `${first.slice(0, 57)}…` : first;
+  return head ? `${when} · ${head}` : `Reunión del ${when}`;
+}

@@ -5,6 +5,8 @@ import { ErrorBox, Loading } from '@/components/ui';
 import { useLoad } from '@/hooks/useLoad';
 import { friendly } from '@/services/api';
 import { exportProfileJson, listProfile, removeAllProfile, removeBySource } from '@/services/profile';
+import { deleteAllMeetings, listMeetings } from '@/services/meetings';
+import { clearMistakes, listMistakes } from '@/services/language';
 
 function download(name: string, content: string) {
   const url = URL.createObjectURL(new Blob([content], { type: 'application/json' }));
@@ -16,11 +18,13 @@ function download(name: string, content: string) {
 export default function Privacidad() {
   const goBack = useBack('/perfil');
   const items = useLoad(listProfile);
+  const meetings = useLoad(listMeetings);
+  const mistakes = useLoad(listMistakes);
   const [msg, setMsg] = useState<{ ok: boolean; text: string } | null>(null);
 
   async function run(action: () => Promise<void>, ok: string) {
     setMsg(null);
-    try { await action(); await items.reload(); setMsg({ ok: true, text: ok }); }
+    try { await action(); await Promise.all([items.reload(), meetings.reload(), mistakes.reload()]); setMsg({ ok: true, text: ok }); }
     catch (e) { setMsg({ ok: false, text: friendly(e) }); }
   }
 
@@ -51,7 +55,18 @@ export default function Privacidad() {
         <button className="btn-danger justify-start" disabled={total === 0} onClick={() => { if (window.confirm('¿Eliminar todo tu perfil profesional? No se puede deshacer.')) void run(removeAllProfile, 'Eliminé tu perfil profesional.'); }}>Eliminar todo mi perfil</button>
       </div>
 
-      <p className="px-1 text-sm text-muted">Las grabaciones, transcripciones y conversaciones se van a poder eliminar desde acá cuando estén disponibles.</p>
+      <div className="card flex flex-col gap-3">
+        <p className="font-bold">Reuniones guardadas ({meetings.data?.length ?? 0})</p>
+        <p className="text-sm text-muted">Vivia nunca guarda el audio. Solo se guarda lo que vos elegís guardar.</p>
+        <button className="btn-danger justify-start" disabled={!meetings.data?.length} onClick={() => { if (window.confirm('¿Eliminar todas tus reuniones guardadas? No se puede deshacer.')) void run(deleteAllMeetings, 'Eliminé tus reuniones guardadas.'); }}>Eliminar mis reuniones</button>
+      </div>
+
+      <div className="card flex flex-col gap-3">
+        <p className="font-bold">Práctica de inglés ({mistakes.data?.length ?? 0} errores guardados)</p>
+        <button className="btn-danger justify-start" disabled={!mistakes.data?.length} onClick={() => { if (window.confirm('¿Borrar tu historial de errores de inglés?')) void run(clearMistakes, 'Borré tu historial de inglés.'); }}>Borrar historial de inglés</button>
+      </div>
+
+      <p className="px-1 text-sm text-muted">En la entrevista en vivo y en la reunión, el audio se envía a la IA para entenderlo y no se guarda en ningún lado.</p>
     </div>
   );
 }

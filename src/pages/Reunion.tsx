@@ -6,6 +6,7 @@ import { AiNotAvailableError } from '@/services/ai';
 import { ProfileError } from '@/services/profile';
 import { analyzeMeeting, pickRecorderMime } from '@/services/meeting';
 import { translate } from '@/services/language';
+import { deleteMeeting, listMeetings, saveMeeting, type SavedMeeting } from '@/services/meetings';
 import { formatClock, formatMinutes, type MeetingResult } from '@/domain/meeting';
 import { LANG_NAME, type Lang } from '@/domain/language';
 
@@ -24,6 +25,9 @@ export default function Reunion() {
   const [busyTr, setBusyTr] = useState(false);
   const [copied, setCopied] = useState(false);
   const [lockOk, setLockOk] = useState(true);
+  const [saved, setSaved] = useState<SavedMeeting[] | null>(null);
+  const [saveMsg, setSaveMsg] = useState<string | null>(null);
+  const [withText, setWithText] = useState(false);
   const rec = useRef<MediaRecorder | null>(null);
   const stream = useRef<MediaStream | null>(null);
   const chunks = useRef<Blob[]>([]);
@@ -43,6 +47,8 @@ export default function Reunion() {
     document.addEventListener('visibilitychange', onVis);
     return () => document.removeEventListener('visibilitychange', onVis);
   }, [phase]);
+
+  useEffect(() => { void listMeetings().then(setSaved); }, []);
 
   useEffect(() => () => {
     if (timer.current) window.clearInterval(timer.current);
@@ -97,6 +103,18 @@ export default function Reunion() {
     const a = document.createElement('a');
     a.href = url; a.download = `reunion.${lastAudio.type.includes('mp4') ? 'm4a' : 'webm'}`; a.click();
     URL.revokeObjectURL(url);
+  }
+
+  async function doSave() {
+    if (!result) return;
+    const ok = await saveMeeting(result, withText);
+    setSaveMsg(ok ? 'Guardada en tus reuniones.' : 'No pude guardarla todavía (falta activar la tabla en tu base de datos). Copiá el resumen.');
+    if (ok) setSaved(await listMeetings());
+  }
+
+  async function removeSaved(id: string) {
+    if (!window.confirm('¿Eliminar esta reunión guardada?')) return;
+    try { await deleteMeeting(id); setSaved(await listMeetings()); } catch (e) { setErr(errorText(e)); }
   }
 
   async function copy(text: string) {
@@ -156,6 +174,18 @@ export default function Reunion() {
         </div>
       )}
 
+      {!result && saved && saved.length > 0 && phase !== 'working' && (
+        <div className="flex flex-col gap-2">
+          <h2 className="px-1 text-lg">Mis reuniones</h2>
+          {saved.map((m) => (
+            <div key={m.id} className="card flex items-center gap-2 !p-3">
+              <button className="min-h-[44px] flex-1 text-left text-[15px] font-semibold" onClick={() => { setResult(m.result); setSaveMsg(null); setLastAudio(null); setPhase('done'); }}>{m.title}</button>
+              <button className="flex h-10 w-10 items-center justify-center rounded-full text-muted hover:bg-line" onClick={() => void removeSaved(m.id)} aria-label={`Eliminar ${m.title}`}>✕</button>
+            </div>
+          ))}
+        </div>
+      )}
+
       {result && (
         <div className="flex flex-col gap-4">
           <div className="card flex flex-col gap-2">
@@ -203,7 +233,12 @@ export default function Reunion() {
               {showText && <p className="whitespace-pre-line text-[15px] leading-relaxed text-muted">{result.transcript}</p>}
             </div>
           )}
-          <p className="px-1 text-xs text-muted">Este resultado no se guarda: copialo o guardalo antes de salir de esta pantalla.</p>
+          <div className="card flex flex-col gap-3">
+            <label className="flex min-h-[44px] items-center gap-3 text-[15px]"><input type="checkbox" checked={withText} onChange={(e) => setWithText(e.target.checked)} className="h-5 w-5" />Guardar también la transcripción</label>
+            <button className="btn-primary" onClick={() => void doSave()}>Guardar en mis reuniones</button>
+            {saveMsg && <p className="text-sm font-semibold text-lake-dark" role="status">{saveMsg}</p>}
+          </div>
+          <p className="px-1 text-xs text-muted">Si no la guardás, este resultado se pierde al salir de la pantalla. El audio nunca se guarda.</p>
         </div>
       )}
     </div>

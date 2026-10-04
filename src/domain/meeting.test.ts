@@ -22,3 +22,11 @@ test('formatClock', () => {
   assert.equal(formatClock(65), '01:05');
   assert.equal(formatClock(3725), '1:02:05');
 });
+
+import { meetingTitle } from './meeting.ts';
+test('meetingTitle usa la primera frase del resumen y la acorta', () => {
+  const base = { language: 'es' as const, transcript: '', decisions: [], tasks: [], dates: [], openQuestions: [] };
+  assert.match(meetingTitle({ ...base, summary: 'Se revisó el cierre del mes. Otra frase.' }, new Date('2026-10-04T15:00:00Z')), /Se revisó el cierre del mes\./);
+  assert.ok(meetingTitle({ ...base, summary: 'x'.repeat(200) }, new Date()).length < 90);
+  assert.match(meetingTitle({ ...base, summary: '' }, new Date('2026-10-04T15:00:00Z')), /^Reunión del/);
+});

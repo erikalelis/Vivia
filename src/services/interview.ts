@@ -1,6 +1,7 @@
 import { ai } from '@/services/ai';
 import { profileForAi } from '@/domain/profile';
-import { validateAnswer, validatePrep, type InterviewAnswer, type InterviewPrep } from '@/domain/interview';
+import { validateAnswer, validateListen, validatePrep, type InterviewAnswer, type InterviewPrep, type ListenResult } from '@/domain/interview';
+import { encodeWav } from '@/domain/live';
 import { getOffSections, listProfile, ProfileError, readDocument } from '@/services/profile';
 
 /** Perfil en texto, solo con las secciones que la usuaria dejó habilitadas. */
@@ -26,4 +27,16 @@ export async function answerQuestion(question: string, vacancy: string, blank: b
   const a = validateAnswer(await ai.interview({ action: 'answer', profile, vacancy: vacancy.trim(), question, blank }));
   if (!a) throw new ProfileError('No pude armar una respuesta. Probá de nuevo.');
   return a;
+}
+
+function bytesToBase64(bytes: Uint8Array): string {
+  let bin = '';
+  for (let i = 0; i < bytes.length; i += 0x8000) bin += String.fromCharCode(...bytes.subarray(i, i + 0x8000));
+  return btoa(bin);
+}
+
+/** Manda una frase escuchada en vivo y devuelve qué se dijo y, si era una pregunta, la respuesta. */
+export async function listenSegment(pcm: Float32Array, profile: string, vacancy: string, context: string): Promise<ListenResult | null> {
+  const wav = encodeWav(pcm);
+  return validateListen(await ai.interview({ action: 'listen', audio_base64: bytesToBase64(wav), profile, vacancy: vacancy.trim(), context }));
 }

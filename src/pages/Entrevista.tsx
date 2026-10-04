@@ -8,6 +8,7 @@ import { AiNotAvailableError } from '@/services/ai';
 import { ProfileError } from '@/services/profile';
 import { answerQuestion, prepareInterview } from '@/services/interview';
 import type { InterviewAnswer, InterviewPrep } from '@/domain/interview';
+import EntrevistaVivo from '@/pages/EntrevistaVivo';
 
 const errorText = (e: unknown) => (e instanceof ProfileError || e instanceof AiNotAvailableError ? e.message : friendly(e));
 
@@ -29,7 +30,7 @@ function AnswerCard({ a, title }: { a: { short: string; full: string }; title?: 
 
 export default function Entrevista() {
   const goBack = useBack();
-  const [tab, setTab] = useState<'preparar' | 'pregunta'>('preparar');
+  const [tab, setTab] = useState<'preparar' | 'pregunta' | 'vivo'>('preparar');
   const [vacancy, setVacancy] = useState('');
   const [file, setFile] = useState<File | null>(null);
   const fileRef = useRef<HTMLInputElement>(null);
@@ -62,8 +63,8 @@ export default function Entrevista() {
         <h1 className="text-2xl md:text-3xl">Entrevista</h1>
       </div>
 
-      <div className="grid grid-cols-2 gap-1 rounded-full bg-line p-1" role="tablist">
-        {([['preparar', 'Preparar'], ['pregunta', 'Me hacen una pregunta']] as const).map(([k, label]) => (
+      <div className="grid grid-cols-3 gap-1 rounded-full bg-line p-1" role="tablist">
+        {([['preparar', 'Preparar'], ['pregunta', 'Pregunta'], ['vivo', 'En vivo']] as const).map(([k, label]) => (
           <button key={k} role="tab" aria-selected={tab === k} onClick={() => setTab(k)}
             className={`min-h-[44px] rounded-full px-3 text-sm font-bold transition ${tab === k ? 'bg-white text-berry shadow-calma' : 'text-muted'}`}>{label}</button>
         ))}
@@ -147,6 +148,7 @@ export default function Entrevista() {
           )}
         </>
       )}
+      {tab === 'vivo' && <EntrevistaVivo vacancy={vacancy} />}
       <p className="px-1 text-xs text-muted">Las respuestas se arman con tu perfil real. Revisalas y decilas con tus palabras.</p>
     </div>
   );

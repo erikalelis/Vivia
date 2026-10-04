@@ -36,3 +36,15 @@ export function validateAnswer(raw: unknown): InterviewAnswer | null {
   if (!short && !full) return null;
   return { short: short || full, full: full || short, bridge: arr(r.bridge).map((s) => txt(s, 160)).filter(Boolean).slice(0, 4) };
 }
+
+export interface ListenResult { heard: string; isQuestion: boolean; question: string; short: string; full: string }
+
+/** Resultado de escuchar un tramo de la entrevista en vivo. */
+export function validateListen(raw: unknown): ListenResult | null {
+  const r = (raw ?? {}) as Record<string, unknown>;
+  const heard = txt(r.heard, 1500);
+  const short = txt(r.short, 500), full = txt(r.full, 2200);
+  const isQuestion = r.is_question === true && Boolean(short || full);
+  if (!heard && !isQuestion) return null;
+  return { heard, isQuestion, question: txt(r.question, 400) || heard, short: short || full, full: full || short };
+}

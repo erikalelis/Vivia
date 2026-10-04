@@ -43,6 +43,30 @@ const ANSWER_TOOL = {
   }
 };
 
+const LISTEN_TOOL = {
+  name: 'escuchar_entrevista',
+  description: 'Lo que se escuchó y, si hubo una pregunta, la respuesta.',
+  input_schema: {
+    type: 'object',
+    properties: {
+      heard: { type: 'string' },
+      is_question: { type: 'boolean' },
+      question: { type: ['string', 'null'] },
+      short: { type: ['string', 'null'] },
+      full: { type: ['string', 'null'] }
+    },
+    required: ['heard', 'is_question']
+  }
+};
+
+const LISTEN_RULES = `
+Estás escuchando una entrevista de trabajo EN VIVO. Recibís un fragmento de audio (una frase o un tramo de lo que dijo alguien).
+- "heard": transcribí fielmente lo que se dice (idioma original).
+- "is_question": true SOLO si quien habla es el ENTREVISTADOR y le hace una pregunta, o le plantea algo que la candidata tiene que responder (incluidos "contame de vos", "¿por qué querés este puesto?"). Si es un saludo, una explicación del puesto, una charla, silencio, ruido, o es la propia candidata hablando o contestando, devolvé false.
+- Si is_question es true: "question" es la pregunta ya limpia; "short" es lo que ella tiene que decir primero (1 o 2 frases, máximo 30 palabras, en primera persona); "full" es la versión completa (4 a 6 frases). Respondé en el idioma de la pregunta salvo que el perfil indique que no maneja ese idioma: en ese caso respondé en español y sugerí cómo explicarlo con honestidad.
+- Si es una pregunta de varias partes, "short" cubre lo principal.
+- Si is_question es false, dejá question, short y full en null.`;
+
 Deno.serve(async (req) => {
   if (req.method === 'OPTIONS') return new Response('ok', { headers: cors });
   try {
@@ -66,6 +90,18 @@ Deno.serve(async (req) => {
       const blank = b.blank === true;
       const text = `PERFIL PROFESIONAL:\n${profile || '(vacío)'}\n\n${vacancy ? `VACANTE:\n${vacancy}\n\n` : ''}${b.context ? `LO QUE VENÍAN HABLANDO:\n${String(b.context).slice(0, 3000)}\n\n` : ''}PREGUNTA DEL ENTREVISTADOR:\n${question}\n\n${blank ? 'La persona se quedó en blanco. Además de la respuesta, dale en "bridge" 3 frases cortas y naturales para ganar unos segundos antes de contestar (por ejemplo repetir la pregunta con otras palabras o decir que lo piensa un instante).' : ''}`;
       return json(await callAi({ system: BASE, tool: ANSWER_TOOL, maxTokens: 3000, content: [{ type: 'text', text }] }));
+    }
+
+    if (b.action === 'listen') {
+      const audio = typeof b.audio_base64 === 'string' ? b.audio_base64 : '';
+      if (!audio) throw new HttpError(400, 'Falta el audio.');
+      if (audio.length > 3_000_000) throw new HttpError(413, 'El fragmento es demasiado largo.');
+      const ctx = typeof b.context === 'string' ? b.context.slice(-3000) : '';
+      const content = [
+        { type: 'document', source: { type: 'base64', media_type: 'audio/wav', data: audio } },
+        { type: 'text', text: `PERFIL PROFESIONAL:\n${profile || '(vacío)'}\n\n${vacancy ? `VACANTE:\n${vacancy.slice(0, 6000)}\n\n` : ''}${ctx ? `LO ÚLTIMO QUE SE DIJO EN LA ENTREVISTA:\n${ctx}\n\n` : ''}Escuchá el fragmento y respondé según las reglas.` }
+      ];
+      return json(await callAi({ system: BASE + LISTEN_RULES, tool: LISTEN_TOOL, maxTokens: 2500, content }));
     }
 
     throw new HttpError(400, 'Acción no válida.');

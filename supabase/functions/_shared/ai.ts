@@ -55,7 +55,7 @@ async function callGemini(apiKey: string, o: ToolCallOptions): Promise<unknown> 
       responseSchema: toGeminiSchema(o.tool.input_schema)
     }
   });
-  const models = [Deno.env.get('GEMINI_MODEL'), 'gemini-3.8-flash', 'gemini-flash-latest', 'gemini-2.5-flash'].filter(Boolean) as string[];
+  const models = [Deno.env.get('GEMINI_MODEL'), 'gemini-3.8-flash', 'gemini-flash-latest', 'gemini-flash-lite-latest'].filter(Boolean) as string[];
   let lastStatus = 0;
   for (const model of models) {
     const res = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent`, {
@@ -68,7 +68,7 @@ async function callGemini(apiKey: string, o: ToolCallOptions): Promise<unknown> 
     }
     lastStatus = res.status;
     console.error('Gemini error', model, res.status, await res.text());
-    if (res.status !== 404 && res.status !== 503) break; // probamos el siguiente modelo si este no existe o está saturado
+    if (![404, 429, 500, 503].includes(res.status)) break; // probamos el siguiente modelo si este no existe, está saturado o sin cuota (cada modelo tiene su cuota)
   }
   throw new HttpError(lastStatus === 429 ? 429 : 502, lastStatus === 429
     ? 'Se alcanzó el límite gratuito de la IA por ahora. Probá de nuevo en un rato.'

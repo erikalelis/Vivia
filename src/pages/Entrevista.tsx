@@ -16,12 +16,12 @@ function AnswerCard({ a, title }: { a: { short: string; full: string }; title?: 
   const [more, setMore] = useState(false);
   return (
     <div className="card flex flex-col gap-3">
-      {title && <p className="text-sm font-bold text-berry">{title}</p>}
-      <p className="text-[1.35rem] font-semibold leading-snug text-ink">{a.short}</p>
+      {title && <p className="text-base font-bold text-berry">{title}</p>}
+      <p className="text-[1.8rem] font-semibold leading-snug text-ink">{a.short}</p>
       {a.full !== a.short && (
         <>
           <button className="btn-ghost self-start !px-0 text-berry" onClick={() => setMore(!more)} aria-expanded={more}>{more ? 'Ver menos' : 'Ver respuesta completa'}</button>
-          {more && <p className="whitespace-pre-line text-[15px] leading-relaxed text-muted">{a.full}</p>}
+          {more && <p className="whitespace-pre-line text-[1.2rem] leading-relaxed text-ink">{a.full}</p>}
         </>
       )}
     </div>
@@ -94,23 +94,23 @@ export default function Entrevista() {
             <div className="flex flex-col gap-5">
               <div className="card flex flex-col gap-2">
                 <p className="text-sm font-bold text-berry">{prep.company ? `${prep.role} · ${prep.company}` : prep.role}</p>
-                <p className="text-[15px] text-muted">{prep.summary}</p>
+                <p className="text-[1.1rem] text-ink">{prep.summary}</p>
               </div>
               {prep.strengths.length > 0 && (
                 <div className="card flex flex-col gap-2">
                   <p className="font-bold">Lo tuyo que encaja</p>
-                  <ul className="flex flex-col gap-1.5 text-[15px] text-muted">{prep.strengths.map((s) => <li key={s}>✓ {s}</li>)}</ul>
+                  <ul className="flex flex-col gap-1.5 text-[1.1rem] text-ink">{prep.strengths.map((s) => <li key={s}>✓ {s}</li>)}</ul>
                 </div>
               )}
               {prep.gaps.length > 0 && (
                 <div className="card flex flex-col gap-3">
                   <p className="font-bold">Lo que pueden preguntarte y cómo manejarlo</p>
                   {prep.gaps.map((g) => (
-                    <div key={g.gap}><p className="text-[15px] font-semibold">{g.gap}</p><p className="text-sm text-muted">{g.how}</p></div>
+                    <div key={g.gap}><p className="text-[1.1rem] font-semibold">{g.gap}</p><p className="text-base text-muted">{g.how}</p></div>
                   ))}
                 </div>
               )}
-              <h2 className="px-1 text-lg">Preguntas probables</h2>
+              <h2 className="px-1 text-xl">Preguntas probables</h2>
               {prep.questions.map((q) => <AnswerCard key={q.q} title={q.q} a={q} />)}
             </div>
           )}
@@ -140,7 +140,7 @@ export default function Entrevista() {
               {blank && answer.bridge.length > 0 && (
                 <div className="card flex flex-col gap-2 !bg-lake-soft">
                   <p className="text-sm font-bold text-lake-dark">Para ganar unos segundos, decí:</p>
-                  {answer.bridge.map((b) => <p key={b} className="text-lg font-semibold text-lake-dark">“{b}”</p>)}
+                  {answer.bridge.map((b) => <p key={b} className="text-2xl font-semibold text-lake-dark">“{b}”</p>)}
                 </div>
               )}
               <AnswerCard a={answer} />

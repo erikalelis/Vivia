@@ -116,9 +116,9 @@ export default function EntrevistaVivo({ vacancy }: { vacancy: string }) {
         {entries.length === 0 && <p className="mt-10 text-center text-lg text-[#8C8598]">Esperando la primera pregunta…</p>}
         {entries.map((e, i) => (
           <div key={e.id} className={`mb-8 ${i > 0 ? 'opacity-45' : ''}`}>
-            <p className="mb-2 text-sm text-[#8C8598]">{e.r.question}</p>
-            <p className={`font-semibold leading-snug ${i === 0 ? 'text-[2.1rem]' : 'text-xl'}`}>{e.r.short}</p>
-            {i === 0 && e.r.full !== e.r.short && <p className="mt-4 text-[1.2rem] leading-relaxed text-[#C9C2D2]">{e.r.full}</p>}
+            <p className="mb-2 text-base text-[#8C8598]">{e.r.question}</p>
+            <p className={`font-semibold leading-snug ${i === 0 ? 'text-[2.4rem]' : 'text-2xl'}`}>{e.r.short}</p>
+            {i === 0 && e.r.full !== e.r.short && <p className="mt-4 text-[1.4rem] leading-relaxed text-[#C9C2D2]">{e.r.full}</p>}
           </div>
         ))}
       </div>

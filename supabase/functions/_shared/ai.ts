@@ -45,31 +45,39 @@ function toGeminiSchema(s: any): any {
 async function callGemini(apiKey: string, o: ToolCallOptions): Promise<unknown> {
   const parts = (o.content as Block[]).map((b) =>
     b.type === 'document' && b.source ? { inline_data: { mime_type: b.source.media_type, data: b.source.data } } : { text: b.text ?? '' });
-  const body = JSON.stringify({
+  const make = (fast: boolean) => JSON.stringify({
     systemInstruction: { parts: [{ text: o.system }] },
     contents: [{ role: 'user', parts }],
     generationConfig: {
       temperature: 0,
-      maxOutputTokens: Math.max(o.maxTokens ?? 2000, 4000),
+      maxOutputTokens: Math.max((o.maxTokens ?? 2000) * 2, 8000),
       responseMimeType: 'application/json',
-      responseSchema: toGeminiSchema(o.tool.input_schema)
+      responseSchema: toGeminiSchema(o.tool.input_schema),
+      // Poco "pensamiento": responde más rápido y no gasta el cupo de salida (que cortaba el JSON).
+      ...(fast ? { thinkingConfig: { thinkingLevel: 'low' } } : {})
     }
   });
   const models = [Deno.env.get('GEMINI_MODEL'), 'gemini-3.8-flash', 'gemini-flash-latest', 'gemini-flash-lite-latest'].filter(Boolean) as string[];
   let lastStatus = 0;
+  let unusable = false;
   for (const model of models) {
-    const res = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent`, {
-      method: 'POST', headers: { 'content-type': 'application/json', 'x-goog-api-key': apiKey }, body
-    });
-    if (res.ok) {
-      const data = await res.json();
-      const text = data?.candidates?.[0]?.content?.parts?.map((p: { text?: string }) => p.text ?? '').join('') ?? '';
-      try { return JSON.parse(text); } catch { throw new HttpError(502, 'La IA no devolvió una respuesta utilizable.'); }
+    for (const fast of [true, false]) {
+      const res = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent`, {
+        method: 'POST', headers: { 'content-type': 'application/json', 'x-goog-api-key': apiKey }, body: make(fast)
+      });
+      if (res.ok) {
+        const data = await res.json();
+        const text = data?.candidates?.[0]?.content?.parts?.map((p: { text?: string }) => p.text ?? '').join('') ?? '';
+        try { return JSON.parse(text); } catch { unusable = true; lastStatus = 0; break; } // respuesta cortada: probamos otro modelo
+      }
+      lastStatus = res.status;
+      console.error('Gemini error', model, fast, res.status, await res.text());
+      if (res.status === 400 && fast) continue; // este modelo no acepta la opción de velocidad: reintento sin ella
+      break;
     }
-    lastStatus = res.status;
-    console.error('Gemini error', model, res.status, await res.text());
-    if (![404, 429, 500, 503].includes(res.status)) break; // probamos el siguiente modelo si este no existe, está saturado o sin cuota (cada modelo tiene su cuota)
+    if (lastStatus !== 0 && ![400, 404, 429, 500, 503].includes(lastStatus)) break;
   }
+  if (unusable && lastStatus === 0) throw new HttpError(502, 'La IA no devolvió una respuesta utilizable.');
   throw new HttpError(lastStatus === 429 ? 429 : 502, lastStatus === 429
     ? 'Se alcanzó el límite gratuito de la IA por ahora. Probá de nuevo en un rato.'
     : 'No pude consultar a la IA en este momento.');

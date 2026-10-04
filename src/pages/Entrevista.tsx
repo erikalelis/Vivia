@@ -35,6 +35,8 @@ export default function Entrevista() {
   const [file, setFile] = useState<File | null>(null);
   const fileRef = useRef<HTMLInputElement>(null);
   const [prep, setPrep] = useState<InterviewPrep | null>(null);
+  // Lo que se le manda a la IA como "la vacante": el texto pegado o, si cargó un archivo, el análisis del puesto.
+  const vacancyContext = vacancy.trim() || (prep ? [prep.role, prep.company, prep.summary].filter(Boolean).join('. ') : '');
   const [busy, setBusy] = useState<string | null>(null);
   const [err, setErr] = useState<string | null>(null);
   const [question, setQuestion] = useState('');
@@ -51,7 +53,7 @@ export default function Entrevista() {
 
   async function doAnswer(isBlank: boolean) {
     v.stop(); setBusy('Armando tu respuesta…'); setErr(null); setBlank(isBlank);
-    try { setAnswer(await answerQuestion(question, vacancy, isBlank)); }
+    try { setAnswer(await answerQuestion(question, vacancyContext, isBlank)); }
     catch (e) { setErr(errorText(e)); }
     finally { setBusy(null); }
   }
@@ -134,7 +136,7 @@ export default function Entrevista() {
             </div>
             <button className="btn-soft" disabled={busy !== null || question.trim().length < 3} onClick={() => void doAnswer(true)}>Me quedé en blanco</button>
           </div>
-          {vacancy.trim() === '' && <p className="px-1 text-sm text-muted">Tip: si antes pegás la vacante en “Preparar”, las respuestas se adaptan al puesto.</p>}
+          {vacancyContext === '' && <p className="px-1 text-sm text-muted">Tip: si antes pegás la vacante en “Preparar”, las respuestas se adaptan al puesto.</p>}
           {answer && (
             <div className="flex flex-col gap-4">
               {blank && answer.bridge.length > 0 && (
@@ -148,7 +150,7 @@ export default function Entrevista() {
           )}
         </>
       )}
-      {tab === 'vivo' && <EntrevistaVivo vacancy={vacancy} />}
+      {tab === 'vivo' && <EntrevistaVivo vacancy={vacancyContext} />}
       <p className="px-1 text-xs text-muted">Las respuestas se arman con tu perfil real. Revisalas y decilas con tus palabras.</p>
     </div>
   );

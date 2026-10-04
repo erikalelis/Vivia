@@ -1,62 +1,43 @@
-# VIVIA — Tu vida, en un solo lugar
+# Vivia — Asistente profesional con IA
 
-Asistente personal (PWA) para organizar pendientes, agenda, Mia y su cuota escolar, carrera, proyectos y documentos. Se instala en el celular, se usa desde la computadora y los datos se sincronizan.
+PWA instalable (Android, iPhone y computadora) que ayuda a preparar entrevistas, acompañarlas en vivo, traducir, practicar inglés, grabar reuniones y mantener un perfil profesional armado a partir del CV.
 
-> **Estado honesto de esta entrega:** el código está completo, pero **todavía no se compiló ni se probó dentro de la app**. El entorno donde se escribió bloqueaba la descarga de paquetes (npm), así que no se pudo ejecutar `npm run build`. Lo que sí se verificó: la lógica central (importes, 50 %, tareas vencidas, validación de la IA) con **30 tests que pasan**. El primer paso al recibirlo es instalar y compilar (abajo); es esperable corregir algún error menor de tipos.
+Hecho por Bluvia.
+
+## Secciones
+- **Inicio**: acceso rápido a todo.
+- **Entrevista**: preparar según la vacante, responder una pregunta, modo en vivo (silencioso, manos libres) y "me quedé en blanco".
+- **Reunión**: graba, transcribe y genera resumen, decisiones y tareas. No guarda el audio.
+- **Inglés**: traducir es/en/pt con detección de idioma y práctica por voz con correcciones y errores frecuentes.
+- **Perfil**: CV (PDF, Word o texto) y datos agregados por voz o texto, con control de qué usa Vivia.
+- **Privacidad**: exportar y borrar perfil, reuniones e historial de inglés.
 
 ## Stack
-React + TypeScript + Vite + Tailwind · PWA (`vite-plugin-pwa`) · Supabase (PostgreSQL, Auth, Storage, Edge Functions) · IA con Claude API desde el servidor.
+React + TypeScript + Vite + Tailwind · PWA (`vite-plugin-pwa`) · Supabase (Postgres con RLS, Auth, Edge Functions) · IA con Gemini desde el servidor (Claude como respaldo).
 
-## Instalación (primera vez)
-Requisitos: Node 20+ y una cuenta gratuita de [Supabase](https://supabase.com).
-
-```bash
-npm install
-cp .env.example .env        # y completá las dos variables VITE_*
-npm run test                # 30 tests de la lógica central
-npm run typecheck           # primera verificación de tipos
-npm run build               # compila
-npm run dev                 # http://localhost:5173
-```
+## Publicación
+Cada push a `main` corre los tests, compila y publica en GitHub Pages (`.github/workflows`). Las usuarias instaladas reciben el aviso "Actualizar ahora"; no hace falta reinstalar.
 
 ## Base de datos
-1. En Supabase: **New project**.
-2. **SQL Editor** → pegá y ejecutá `supabase/migrations/0001_init.sql` (crea tablas, seguridad por usuario y el bucket privado de archivos).
-3. **Project Settings → API**: copiá la *Project URL* y la clave *anon public* a `.env` (`VITE_SUPABASE_URL`, `VITE_SUPABASE_ANON_KEY`).
-4. **Authentication → URL Configuration**: agregá la URL de tu app (local y producción) para los correos de confirmación y recuperación de contraseña.
-5. (Solo desarrollo) `supabase/seed.dev.sql` carga datos de ejemplo. **No lo uses en producción.**
+Ejecutar en el SQL Editor de Supabase, en orden: `supabase/migrations/0001_init.sql`, `0002_perfil.sql`, `0003_ingles.sql`, `0004_reuniones.sql`. Las migraciones son aditivas.
 
-## Conectar la IA (Claude)
-La clave **nunca** va en el frontend. Se guarda como secreto del servidor:
+## IA
+La clave nunca va en el frontend. Se guarda como secreto del servidor:
 ```bash
-npm i -g supabase
-supabase login && supabase link --project-ref TU-REF
-supabase secrets set ANTHROPIC_API_KEY=sk-ant-...
-supabase functions deploy interpret
-supabase functions deploy extract-payment
+supabase secrets set GEMINI_API_KEY=...
+supabase functions deploy profile-extract interview language meeting
 ```
-Sin esto, VIVIA funciona (tareas, agenda, documentos, cuotas cargadas a mano) pero **"Hablale a VIVIA" y la lectura automática del PDF muestran un aviso claro de que la IA no está configurada**; no hay nada simulado.
+Sin clave, la app muestra un aviso claro; no hay respuestas simuladas.
 
-## Qué está implementado
-- Registro, login, logout, recuperación de contraseña, sesión persistente; datos aislados por usuario (RLS).
-- Inicio con resumen (Hoy, Mia, Carrera, Proyectos, Documentos) y botón **Hablale a VIVIA** (texto o voz → IA → confirmación → guardado).
-- **Pendientes**: 6 estados, las vencidas **nunca desaparecen** (Mantener / Reprogramar / Completar / Cancelar), filtros Hoy · Próximas · Vencidas · Esta semana · Todas, prioridad, etiquetas, recurrencia (al completar crea la siguiente), notas y adjuntos.
-- **Agenda**: día, semana y mes; eventos manuales o por IA.
-- **Mia**: Cuotas, Agenda, Pendientes, Documentos y Automatizaciones.
-- **Cuota de Mia**: sube el PDF → la IA lo lee → identifica el **total final** (no el primer importe) → calcula el % en centavos enteros (317.510 → 158.755) → arma el mensaje con tu plantilla → **abre WhatsApp** con el texto listo → vos tocás Enviar → marcás 🟢 Enviado (queda fecha, hora, mes, total, importe, documento y destinatario). Si hay dudas muestra lo detectado y pide confirmar o corregir.
-- Mi carrera, Mis proyectos, Documentos (subir, ver, clasificar, buscar, eliminar), Automatizaciones con historial, Búsqueda global, Ajustes (responsable de pago, %, teléfono, plantilla).
-- PWA instalable con aviso **"✨ Nueva versión de VIVIA disponible → Actualizar ahora"** que no borra datos.
+## Desarrollo
+```bash
+npm install
+cp .env.example .env   # VITE_SUPABASE_URL y VITE_SUPABASE_ANON_KEY
+npm test
+npm run dev
+```
 
-## Lo que requiere algo externo o no está hecho
-| Tema | Situación |
-|---|---|
-| IA y lectura de PDF | Requiere `ANTHROPIC_API_KEY` (ver arriba). |
-| Notificaciones con la app **cerrada** | No incluidas: requieren Web Push (servidor + claves VAPID). Hoy avisan **mientras VIVIA está abierta**. |
-| Voz | Usa el dictado del navegador (Chrome/Edge/Safari). No funciona en todos. |
-| WhatsApp | Abre el chat con el mensaje; **no envía solo** (a propósito). |
-| Tabla `mia_items` | Creada en la base pero sin pantalla propia: Mia usa tareas, eventos y documentos con módulo "Mia". |
-| Notas | Se guardan como pendientes con la etiqueta `#nota`. |
-| Pruebas de PWA/actualización | Se verifica por configuración (test automático), pero conviene probarla a mano una vez desplegada. |
-
-## Actualizar y volver atrás
-Ver `docs/DEPLOYMENT.md`. Arquitectura en `docs/ARCHITECTURE.md`.
+## Límites conocidos
+- El audio del sistema en el modo en vivo solo funciona en Chrome/Edge de escritorio (compartir pestaña con audio). En el celular se usa el micrófono.
+- El reconocimiento de voz depende del navegador.
+- Más detalle en `docs/ARCHITECTURE.md` y `docs/DEPLOYMENT.md`.

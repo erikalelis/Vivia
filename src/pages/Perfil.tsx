@@ -55,7 +55,12 @@ export default function Perfil() {
   }
 
   if (items.loading) return <Loading />;
-  if (items.error) return <ErrorBox message={items.error} onRetry={items.reload} />;
+  if (items.error) return (
+    <div className="flex flex-col gap-4">
+      <ErrorBox message={items.error} onRetry={items.reload} />
+      <button className="btn-ghost self-start" onClick={() => void signOut()}><Icon name="logout" size={20} />Cerrar sesión</button>
+    </div>
+  );
 
   return (
     <div className="flex flex-col gap-5">
